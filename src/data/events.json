@@ -1,0 +1,88 @@
+{
+  "events": [
+    {
+      "id": "evt-001",
+      "title": "Gentle Yoga for Seniors",
+      "category": "Fitness",
+      "date": "2025-08-02",
+      "time": "10:00 AM — 11:00 AM",
+      "location": "SilverBridge Community Hall, 200 Collins St, Melbourne VIC 3000",
+      "description": "A gentle yoga session designed specifically for seniors. Improve flexibility, balance, and relaxation with our experienced instructor. Chairs provided for seated variations. No prior yoga experience needed.",
+      "image": "/images/yoga.jpg",
+      "capacity": 20,
+      "spotsLeft": 8,
+      "price": "Free",
+      "instructor": "Sarah Chen"
+    },
+    {
+      "id": "evt-002",
+      "title": "Digital Skills Workshop — Using Your Smartphone",
+      "category": "Education",
+      "date": "2025-08-05",
+      "time": "2:00 PM — 3:30 PM",
+      "location": "Melbourne City Library, 253 Flinders Lane, Melbourne VIC 3000",
+      "description": "Learn how to use your smartphone with confidence. Topics include making video calls, sending photos, installing apps, and staying safe online. Bring your own device or use one of ours.",
+      "image": "/images/digital.jpg",
+      "capacity": 15,
+      "spotsLeft": 5,
+      "price": "Free",
+      "instructor": "David Nguyen"
+    },
+    {
+      "id": "evt-003",
+      "title": "Memory Care Support Group",
+      "category": "Support",
+      "date": "2025-08-08",
+      "time": "11:00 AM — 12:30 PM",
+      "location": "SilverBridge Health Centre, Level 5, 200 Collins St, Melbourne VIC 3000",
+      "description": "A supportive group for individuals experiencing memory changes and their caregivers. Share experiences, learn coping strategies, and connect with others on a similar journey. Facilitated by a qualified counsellor.",
+      "image": "/images/support.jpg",
+      "capacity": 12,
+      "spotsLeft": 6,
+      "price": "Free",
+      "instructor": "Dr. Emily Watson"
+    },
+    {
+      "id": "evt-004",
+      "title": "Healthy Cooking Demonstration",
+      "category": "Wellness",
+      "date": "2025-08-12",
+      "time": "10:30 AM — 12:00 PM",
+      "location": "SilverBridge Community Kitchen, 200 Collins St, Melbourne VIC 3000",
+      "description": "Watch and learn as our nutritionist prepares easy, budget-friendly meals that are packed with nutrients. Free recipe cards to take home. Tasting session included!",
+      "image": "/images/cooking.jpg",
+      "capacity": 16,
+      "spotsLeft": 12,
+      "price": "$5 (materials fee)",
+      "instructor": "Maria Rossi, Nutritionist"
+    },
+    {
+      "id": "evt-005",
+      "title": "Walking Group — Royal Botanic Gardens",
+      "category": "Fitness",
+      "date": "2025-08-15",
+      "time": "9:00 AM — 10:00 AM",
+      "location": "Royal Botanic Gardens, Birdwood Ave, Melbourne VIC 3004",
+      "description": "Join our weekly walking group for a gentle stroll through the beautiful Botanic Gardens. Flat paths suitable for walkers and wheelchairs. Coffee and chat afterwards at the Gardens Café.",
+      "image": "/images/walking.jpg",
+      "capacity": 30,
+      "spotsLeft": 18,
+      "price": "Free",
+      "instructor": "John Parker, Volunteer Guide"
+    },
+    {
+      "id": "evt-006",
+      "title": "Home Safety Assessment Workshop",
+      "category": "Safety",
+      "date": "2025-08-20",
+      "time": "1:00 PM — 2:30 PM",
+      "location": "SilverBridge Health Centre, Level 5, 200 Collins St, Melbourne VIC 3000",
+      "description": "Learn how to make your home safer and reduce fall risks. Our occupational therapist will demonstrate grab bar installation, trip hazard removal, and simple home modifications. Book a free in-home assessment after the workshop.",
+      "image": "/images/safety.jpg",
+      "capacity": 10,
+      "spotsLeft": 3,
+      "price": "Free",
+      "instructor": "Lisa Thompson, Occupational Therapist"
+    }
+  ]
+}

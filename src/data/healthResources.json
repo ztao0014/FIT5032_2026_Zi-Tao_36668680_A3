@@ -1,0 +1,58 @@
+{
+  "resources": [
+    {
+      "id": "res-001",
+      "title": "Understanding High Blood Pressure",
+      "category": "Heart Health",
+      "summary": "Learn what blood pressure numbers mean and discover simple lifestyle changes to keep your heart healthy.",
+      "plainSummary": "Blood pressure is how hard your heart has to work to push blood around your body. This guide explains what the numbers mean and gives simple tips to help keep your heart strong.",
+      "content": "<h2>What is Blood Pressure?</h2><p>Blood pressure is the force of your blood pushing against the walls of your arteries. It is measured in two numbers: systolic (when your heart beats) over diastolic (when your heart rests).</p><h2>What is a Healthy Range?</h2><p>A normal blood pressure reading is around 120/80 mmHg. Readings consistently above 140/90 mmHg may indicate hypertension, which should be discussed with your doctor.</p><h2>Simple Lifestyle Changes</h2><ul><li>Reduce salt in your diet</li><li>Take a gentle 30-minute walk each day</li><li>Eat more fresh fruits and vegetables</li><li>Manage stress through deep breathing or meditation</li><li>Take prescribed medications as directed by your doctor</li></ul>",
+      "lastUpdated": "2025-06-15"
+    },
+    {
+      "id": "res-002",
+      "title": "Staying Active After 65",
+      "category": "Fitness",
+      "summary": "Discover safe and enjoyable ways to stay physically active in your golden years.",
+      "plainSummary": "It is important to keep your body moving as you get older. This article shares safe and fun ways to stay active, even if you have not exercised in a long time.",
+      "content": "<h2>Why Exercise Matters</h2><p>Regular physical activity helps maintain independence, reduces the risk of falls, and improves mood and mental health.</p><h2>Recommended Activities</h2><ul><li>Walking — aim for 30 minutes, 5 days a week</li><li>Swimming or water aerobics — easy on the joints</li><li>Tai Chi — improves balance and flexibility</li><li>Gentle yoga or chair-based exercises</li><li>Gardening — a great way to stay active outdoors</li></ul><h2>Safety First</h2><p>Always check with your doctor before starting a new exercise program. Start slowly and listen to your body.</p>",
+      "lastUpdated": "2025-06-20"
+    },
+    {
+      "id": "res-003",
+      "title": "Recognising Early Signs of Alzheimer's Disease",
+      "category": "Brain Health",
+      "summary": "A guide for families to recognise early warning signs of dementia and when to seek medical advice.",
+      "plainSummary": "This article helps you spot the early warning signs of memory problems. It tells you what is normal forgetfulness and when you should see a doctor.",
+      "content": "<h2>Common Early Signs</h2><ul><li>Memory loss that disrupts daily life — forgetting recently learned information</li><li>Challenges in planning or solving problems — difficulty following a familiar recipe</li><li>Confusion with time or place — losing track of dates or seasons</li><li>Trouble understanding visual images — difficulty reading or judging distance</li><li>Misplacing things — putting items in unusual places and being unable to retrace steps</li></ul><h2>When to See a Doctor</h2><p>If you or a loved one experiences several of these signs consistently over time, schedule an appointment with your GP for a cognitive assessment. Early diagnosis allows for better planning and access to support services.</p>",
+      "lastUpdated": "2025-07-01"
+    },
+    {
+      "id": "res-004",
+      "title": "Nutrition Tips for Healthy Ageing",
+      "category": "Nutrition",
+      "summary": "Essential nutrients and meal ideas tailored for the nutritional needs of older adults.",
+      "plainSummary": "As you get older, your body needs different types of food to stay healthy. This guide tells you which foods are best and gives easy meal ideas.",
+      "content": "<h2>Key Nutrients for Seniors</h2><ul><li><strong>Calcium and Vitamin D</strong> — for strong bones. Found in dairy, leafy greens, and fortified cereals.</li><li><strong>Fibre</strong> — for digestive health. Found in whole grains, fruits, vegetables, and legumes.</li><li><strong>Protein</strong> — to maintain muscle mass. Found in lean meats, eggs, beans, and fish.</li><li><strong>Vitamin B12</strong> — for nerve function. Found in meat, fish, eggs, and fortified foods.</li><li><strong>Water</strong> — stay hydrated! Aim for 6-8 glasses a day.</li></ul><h2>Easy Meal Ideas</h2><p>Porridge with berries for breakfast; a salad with tuna or chickpeas for lunch; grilled fish with steamed vegetables for dinner. Keep it simple and colourful!</p>",
+      "lastUpdated": "2025-06-28"
+    },
+    {
+      "id": "res-005",
+      "title": "Managing Arthritis Pain at Home",
+      "category": "Pain Management",
+      "summary": "Practical, drug-free strategies to manage arthritis pain and maintain joint mobility.",
+      "plainSummary": "Arthritis causes pain and stiffness in your joints. This guide gives you easy ways to feel better at home without needing more medicine.",
+      "content": "<h2>Heat and Cold Therapy</h2><p>Apply a warm towel or heat pack to stiff joints for 15-20 minutes to improve flexibility. Use a cold pack wrapped in a cloth for 10-15 minutes to reduce swelling after activity.</p><h2>Gentle Movement</h2><p>Gentle range-of-motion exercises can reduce stiffness. Try slowly bending and straightening each joint through its full range of motion daily.</p><h2>Assistive Devices</h2><p>Jar openers, large-grip utensils, and ergonomic tools can reduce strain on hand joints. A walking stick or frame can relieve pressure on knees and hips.</p><h2>Maintain a Healthy Weight</h2><p>Extra weight puts more pressure on your joints. Even modest weight loss can significantly reduce pain.</p>",
+      "lastUpdated": "2025-07-05"
+    },
+    {
+      "id": "res-006",
+      "title": "Understanding Government Subsidies for Home Care",
+      "category": "Financial Support",
+      "summary": "A clear guide to My Aged Care, Home Care Packages, and Commonwealth Home Support Programme.",
+      "plainSummary": "The government gives money to help older Australians get care at home. This article explains what help you can get and how to apply.",
+      "content": "<h2>My Aged Care</h2><p>My Aged Care is the Australian Government's starting point for aged care services. Call <strong>1800 200 422</strong> or visit the My Aged Care website to register.</p><h2>Home Care Packages (HCP)</h2><p>Four levels of support, from basic care needs (Level 1) to high care needs (Level 4). Services can include personal care, nursing, cleaning, meal preparation, and transport.</p><h2>Commonwealth Home Support Programme (CHSP)</h2><p>Entry-level support for older people who need a small amount of help to stay independent. Includes domestic assistance, personal care, meals, and social support.</p><h2>How to Apply</h2><ol><li>Register with My Aged Care online or by phone</li><li>Complete an in-home assessment (free)</li><li>Receive your referral code and choose a provider</li><li>Start receiving services</li></ol>",
+      "lastUpdated": "2025-07-10"
+    }
+  ]
+}
