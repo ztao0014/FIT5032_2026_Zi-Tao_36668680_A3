@@ -15,7 +15,7 @@ function goToSupport() {
     aria-label="Emergency support — Get help now"
     title="Emergency Support"
   >
-    <span style="font-size: 1.4rem;">🆘</span>
-    <span style="font-size: 0.65rem;">HELP</span>
+    <span style="font-size: 1.8rem;">🆘</span>
+    <span style="font-size: 0.8rem; letter-spacing: 1px;">HELP</span>
   </button>
 </template>

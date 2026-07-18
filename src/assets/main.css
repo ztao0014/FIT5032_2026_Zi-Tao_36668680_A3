@@ -239,12 +239,27 @@ body.high-contrast .table {
   bottom: 24px;
   right: 24px;
   z-index: 1050;
-  width: 72px;
-  height: 72px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   font-size: 1rem;
   font-weight: bold;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  animation: pulse 2s infinite;
+}
+/* Gentle pulse to draw attention */
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3); }
+  50% { box-shadow: 0 4px 24px rgba(220, 53, 69, 0.6); }
+}
+/* Even larger on desktop */
+@media (min-width: 768px) {
+  .emergency-btn {
+    width: 100px;
+    height: 100px;
+    bottom: 32px;
+    right: 32px;
+  }
 }
 
 /* ---------- Star rating ---------- */
