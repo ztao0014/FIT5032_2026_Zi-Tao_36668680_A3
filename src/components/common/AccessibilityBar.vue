@@ -1,10 +1,12 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue'
+import { useAccessibility } from '@/composables/useAccessibility'
+
+const { plainLanguage, togglePlainLanguage } = useAccessibility()
 
 // Persist accessibility settings in localStorage
 const fontSize = ref(loadPreference('sb-font-size', 'default'))
 const highContrast = ref(loadPreference('sb-high-contrast', false))
-const plainLanguage = ref(loadPreference('sb-plain-language', false))
 
 function loadPreference(key, defaultValue) {
   try {
@@ -36,12 +38,6 @@ function applyFontSize() {
 function applyContrast() {
   document.body.classList.toggle('high-contrast', highContrast.value)
   savePreference('sb-high-contrast', highContrast.value)
-}
-
-// Plain language toggle
-function togglePlainLanguage() {
-  plainLanguage.value = !plainLanguage.value
-  savePreference('sb-plain-language', plainLanguage.value)
 }
 
 function cycleFontSize() {
@@ -93,12 +89,12 @@ onMounted(() => {
       <!-- Plain Language Toggle -->
       <button
         class="btn btn-sm"
-        :class="plainLanguage ? 'btn-success' : 'btn-outline-success'"
+        :class="plainLanguage.plainLanguage ? 'btn-success' : 'btn-outline-success'"
         @click="togglePlainLanguage"
-        :aria-label="'Plain language mode: ' + (plainLanguage ? 'on' : 'off') + '. Click to toggle.'"
-        :aria-pressed="plainLanguage"
+        :aria-label="'Plain language mode: ' + (plainLanguage.plainLanguage ? 'on' : 'off') + '. Click to toggle.'"
+        :aria-pressed="plainLanguage.plainLanguage"
       >
-        {{ plainLanguage ? '✓ Plain Language' : 'Plain Language' }}
+        {{ plainLanguage.plainLanguage ? '✓ Plain Language' : 'Plain Language' }}
       </button>
     </div>
   </div>

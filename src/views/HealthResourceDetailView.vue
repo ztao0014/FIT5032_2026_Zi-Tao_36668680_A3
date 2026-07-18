@@ -2,12 +2,12 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import healthResourcesData from '@/data/healthResources.json'
+import { useAccessibility } from '@/composables/useAccessibility'
 
 const route = useRoute()
+const { plainLanguage } = useAccessibility()
 const resource = ref(null)
 const notFound = ref(false)
-
-const plainLanguageEnabled = ref(false)
 
 const displayContent = computed(() => {
   if (!resource.value) return ''

@@ -2,8 +2,10 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import healthResourcesData from '@/data/healthResources.json'
+import { useAccessibility } from '@/composables/useAccessibility'
 
 const router = useRouter()
+const { plainLanguage } = useAccessibility()
 const resources = ref([])
 const selectedCategory = ref('All')
 const searchQuery = ref('')
@@ -93,7 +95,9 @@ function viewResource(id) {
             <div class="card-body">
               <span class="badge bg-sb-blue mb-2">{{ res.category }}</span>
               <h2 class="card-title h4">{{ res.title }}</h2>
-              <p class="card-text">{{ res.summary }}</p>
+              <p class="card-text">
+                {{ plainLanguage.plainLanguage && res.plainSummary ? res.plainSummary : res.summary }}
+              </p>
               <p class="card-text"><small class="text-muted">Last updated: {{ res.lastUpdated }}</small></p>
             </div>
             <div class="card-footer bg-white border-top-0">
