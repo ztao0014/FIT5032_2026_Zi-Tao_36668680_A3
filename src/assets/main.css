@@ -245,12 +245,12 @@ body.high-contrast .table {
   font-size: 1rem;
   font-weight: bold;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  animation: pulse 2s infinite;
+  animation: pulse-sos 1.5s ease-in-out infinite;
 }
-/* Gentle pulse to draw attention */
-@keyframes pulse {
-  0%, 100% { box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3); }
-  50% { box-shadow: 0 4px 24px rgba(220, 53, 69, 0.6); }
+/* Eye-catching scale pulse for elderly users */
+@keyframes pulse-sos {
+  0%, 100% { transform: scale(1); box-shadow: 0 4px 16px rgba(220, 53, 69, 0.5); }
+  50% { transform: scale(1.15); box-shadow: 0 8px 28px rgba(220, 53, 69, 0.8); }
 }
 /* Even larger on desktop */
 @media (min-width: 768px) {
