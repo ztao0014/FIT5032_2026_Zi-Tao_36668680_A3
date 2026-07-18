@@ -81,7 +81,8 @@ body.high-contrast .btn-primary {
 }
 body.high-contrast .btn-outline-primary,
 body.high-contrast .btn-outline-light,
-body.high-contrast .btn-outline-secondary {
+body.high-contrast .btn-outline-secondary,
+body.high-contrast .btn-outline-dark {
   color: #ffff00 !important;
   border-color: #ffff00 !important;
 }
@@ -131,6 +132,12 @@ body.high-contrast .form-select {
   background-color: #000 !important;
   color: #fff !important;
   border-color: #fff !important;
+}
+body.high-contrast ::placeholder {
+  color: #aaa !important;
+}
+body.high-contrast .form-control::placeholder {
+  color: #aaa !important;
 }
 body.high-contrast .accessibility-bar {
   background-color: #000 !important;
