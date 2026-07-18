@@ -17,7 +17,8 @@ function handleLogout() {
 
 <template>
   <nav
-    class="navbar navbar-expand-lg navbar-dark bg-sb-dark navbar-silverbridge sticky-top"
+    class="navbar navbar-expand-lg navbar-dark navbar-silverbridge sticky-top"
+    style="background: var(--sb-primary-dark);"
     aria-label="Main navigation"
   >
     <div class="container">

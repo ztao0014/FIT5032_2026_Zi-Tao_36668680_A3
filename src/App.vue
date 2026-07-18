@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, provide } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { RouterView } from 'vue-router'
 import AppNavbar from './components/common/AppNavbar.vue'
 import AppFooter from './components/common/AppFooter.vue'
@@ -9,12 +9,50 @@ import { useAuthStore } from '@/stores/auth'
 
 const authStore = useAuthStore()
 
-// Plain language toggle state — shared across components
-// (can be extended with provide/inject)
+// Back to top button
+const showBackToTop = ref(false)
+
+function handleScroll() {
+  showBackToTop.value = window.scrollY > 400
+}
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+// Scroll-reveal: observe elements with .reveal class
+let observer = null
+
+function setupRevealObserver() {
+  observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible')
+      }
+    })
+  }, { threshold: 0.15 })
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
+}
 
 onMounted(async () => {
-  // Initialize Firebase auth listener (persists login state)
   await authStore.initAuthListener()
+  window.addEventListener('scroll', handleScroll, { passive: true })
+
+  // Run reveal after a small delay so DOM is ready
+  setTimeout(setupRevealObserver, 300)
+
+  // Also observe after each route change
+  const origPush = history.pushState
+  history.pushState = function (...args) {
+    origPush.apply(this, args)
+    setTimeout(setupRevealObserver, 300)
+  }
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll)
+  if (observer) observer.disconnect()
 })
 </script>
 
@@ -31,10 +69,20 @@ onMounted(async () => {
 
   <AppFooter />
   <EmergencyButton />
+
+  <!-- Back to Top -->
+  <button
+    class="back-to-top"
+    :class="{ visible: showBackToTop }"
+    @click="scrollToTop"
+    aria-label="Back to top of page"
+    title="Back to top"
+  >
+    ↑
+  </button>
 </template>
 
 <style>
-/* App-level layout: push footer to bottom */
 #app {
   display: flex;
   flex-direction: column;

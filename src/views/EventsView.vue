@@ -85,22 +85,34 @@ function viewEvent(id) {
 
       <!-- Event Cards -->
       <div class="row g-4">
-        <div class="col-lg-6 col-xl-4" v-for="event in filteredEvents" :key="event.id">
-          <div class="card h-100 shadow-sm">
-            <div class="card-body">
-              <span class="badge bg-sb-blue mb-2">{{ event.category }}</span>
-              <h2 class="card-title h5">{{ event.title }}</h2>
-              <p class="card-text text-muted small">
-                🕐 <strong>{{ event.date }}</strong> | {{ event.time }}<br />
-                📍 {{ event.location }}<br />
-                👤 {{ event.instructor }}<br />
-                💰 {{ event.price }}
+        <div class="col-lg-6 col-xl-4" v-for="(event, i) in filteredEvents" :key="event.id">
+          <div class="card h-100 reveal" :style="{ transitionDelay: (i % 6) * 0.08 + 's' }">
+            <div class="card-body p-4">
+              <div class="d-flex align-items-start gap-3 mb-3">
+                <div class="event-date-badge flex-shrink-0">
+                  <span class="day">{{ new Date(event.date).getDate() }}</span>
+                  <span class="month">{{ new Date(event.date).toLocaleString('en-AU', { month: 'short' }) }}</span>
+                </div>
+                <div>
+                  <span class="badge rounded-pill mb-1" style="background: var(--sb-primary);">{{ event.category }}</span>
+                  <h2 class="card-title h5 mb-1">{{ event.title }}</h2>
+                </div>
+              </div>
+              <p class="card-text text-muted small mb-1">
+                ⏰ {{ event.time }}
               </p>
-              <p class="card-text">{{ event.description.substring(0, 120) }}...</p>
+              <p class="card-text small mb-2">
+                📍 {{ event.location }}
+              </p>
+              <p class="card-text small">
+                👤 {{ event.instructor }} &nbsp;|&nbsp; 💰 {{ event.price }}
+              </p>
+              <p class="card-text mt-2">{{ event.description.substring(0, 120) }}...</p>
             </div>
-            <div class="card-footer bg-white border-top-0 d-flex justify-content-between align-items-center">
-              <span class="badge fs-6" :class="event.spotsLeft > 0 ? 'bg-success' : 'bg-danger'">
-                {{ event.spotsLeft > 0 ? event.spotsLeft + ' left' : 'Full' }}
+            <div class="card-footer d-flex justify-content-between align-items-center px-4 py-3">
+              <span class="badge rounded-pill fs-6"
+                :class="event.spotsLeft > 0 ? 'bg-success' : 'bg-danger'">
+                {{ event.spotsLeft > 0 ? event.spotsLeft + ' spots left' : 'Fully booked' }}
               </span>
               <button class="btn btn-primary btn-sm" @click="viewEvent(event.id)">
                 View Details →
