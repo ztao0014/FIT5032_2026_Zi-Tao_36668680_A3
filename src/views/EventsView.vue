@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch, nextTick, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import eventsData from '@/data/events.json'
 
@@ -24,6 +24,14 @@ const filteredEvents = computed(() => {
     result = result.filter(e => e.title.toLowerCase().includes(q) || e.location.toLowerCase().includes(q))
   }
   return result
+})
+
+// Re-observe reveal cards after filtering
+watch([filteredEvents, selectedCategory, searchQuery], async () => {
+  await nextTick()
+  document.querySelectorAll('.reveal').forEach(el => {
+    el.classList.add('visible')
+  })
 })
 
 onMounted(() => {

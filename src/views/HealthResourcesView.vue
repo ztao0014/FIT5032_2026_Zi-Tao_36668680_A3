@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch, nextTick, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import healthResourcesData from '@/data/healthResources.json'
 import { useAccessibility } from '@/composables/useAccessibility'
@@ -26,6 +26,14 @@ const filteredResources = computed(() => {
     result = result.filter(r => r.title.toLowerCase().includes(q) || r.summary.toLowerCase().includes(q))
   }
   return result
+})
+
+// Re-observe reveal cards after filtering
+watch([filteredResources, selectedCategory, searchQuery], async () => {
+  await nextTick()
+  document.querySelectorAll('.reveal').forEach(el => {
+    el.classList.add('visible')
+  })
 })
 
 onMounted(() => {
