@@ -72,6 +72,12 @@ function handleLogout() {
             </RouterLink>
           </li>
 
+          <li v-if="isLoggedIn && userRole === 'admin'" class="nav-item">
+            <RouterLink class="nav-link text-warning fw-bold" to="/admin" active-class="active">
+              🛡️ ADMIN
+            </RouterLink>
+          </li>
+
           <template v-if="!isLoggedIn">
             <li class="nav-item ms-lg-2">
               <RouterLink class="btn btn-outline-light mt-2 mt-lg-0" to="/login">
