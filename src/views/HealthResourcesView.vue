@@ -108,7 +108,7 @@ function viewResource(id) {
       <!-- Resource Cards -->
       <div class="row g-4">
         <div class="col-lg-6" v-for="res in filteredResources" :key="res.id">
-          <div class="card h-100 shadow-sm">
+          <div class="card h-100 shadow-sm reveal">
             <div class="card-body">
               <span class="badge bg-sb-blue mb-2">{{ res.category }}</span>
               <h2 class="card-title h4">{{ res.title }}</h2>
