@@ -14,6 +14,10 @@ const displayContent = computed(() => {
   return resource.value.content
 })
 
+function printArticle() {
+  window.print()
+}
+
 onMounted(() => {
   const id = route.params.id
   const found = healthResourcesData.resources.find(r => r.id === id)
@@ -63,7 +67,7 @@ onMounted(() => {
 
       <div class="d-flex justify-content-between align-items-center mt-4">
         <router-link to="/health-resources" class="btn btn-outline-primary btn-lg">← Back to All Resources</router-link>
-        <button class="btn btn-outline-secondary btn-lg" @click="window.print()" title="Print this article in large font">
+        <button class="btn btn-outline-secondary btn-lg" @click="printArticle" title="Print this article in large font">
           🖨️ Print This Article
         </button>
       </div>
