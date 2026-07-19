@@ -119,10 +119,14 @@ const roleLabel = computed(() => {
 
         <!-- My Bookings -->
         <div class="card shadow-sm">
-          <div class="card-body">
-            <h2 class="h5">My Bookings</h2>
-            <p class="text-muted mb-0">You have no upcoming bookings.</p>
-            <router-link to="/events" class="btn btn-primary mt-3">Browse Events →</router-link>
+          <div class="card-body text-center py-4">
+            <div style="font-size: 2.5rem;">📋</div>
+            <h2 class="h5 mt-2">My Bookings</h2>
+            <p class="text-muted">You don't have any upcoming bookings yet.</p>
+            <p class="small text-muted">Browse our community events and find something you'll enjoy!</p>
+            <router-link to="/events" class="btn btn-primary btn-lg mt-2">
+              📅 Browse Events →
+            </router-link>
           </div>
         </div>
       </div>

@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import eventsData from '@/data/events.json'
 import StarRating from '@/components/common/StarRating.vue'
 import { useAuthStore } from '@/stores/auth'
-import { doc, getDoc, setDoc, collection, query, where, getDocs } from 'firebase/firestore'
+import { doc, getDoc, setDoc, deleteDoc, collection, query, where, getDocs } from 'firebase/firestore'
 import { db } from '@/firebase/config'
 
 const route = useRoute()
@@ -86,6 +86,31 @@ async function submitRating(score) {
   }
 }
 
+const daysUntil = computed(() => {
+  if (!event.value) return ''
+  const diff = Math.ceil((new Date(event.value.date) - new Date()) / (1000 * 60 * 60 * 24))
+  if (diff === 0) return 'Today!'
+  if (diff === 1) return 'Tomorrow!'
+  if (diff > 0) return diff + ' days from now'
+  return 'Past event'
+})
+
+const daysUntilClass = computed(() => {
+  if (!daysUntil.value) return ''
+  if (daysUntil.value === 'Today!' || daysUntil.value === 'Tomorrow!') return 'text-success'
+  if (daysUntil.value === 'Past event') return 'text-muted'
+  return 'text-primary'
+})
+
+async function clearRating() {
+  if (userRating.value === 0) return
+  userRating.value = 0
+  try {
+    await deleteDoc(doc(db, 'ratings', authStore.userId + '_' + route.params.id))
+    await loadRatings()
+  } catch { /* ignore */ }
+}
+
 function goToBooking() {
   if (!isLoggedIn.value) {
     router.push({ path: '/login', query: { redirect: '/events/' + route.params.id + '/book' } })
@@ -113,8 +138,9 @@ function goToBooking() {
 
       <div class="row">
         <div class="col-lg-8">
-          <span class="badge bg-sb-blue mb-2">{{ event.category }}</span>
+          <span class="badge rounded-pill mb-2" style="background: var(--sb-primary);">{{ event.category }}</span>
           <h1>{{ event.title }}</h1>
+          <p class="fw-bold fs-5" :class="daysUntilClass">📅 {{ daysUntil }}</p>
 
           <!-- Star Rating -->
           <div class="d-flex align-items-center gap-3 my-3">
@@ -145,6 +171,9 @@ function goToBooking() {
           />
           <p v-if="userRating > 0" class="text-success mt-1">
             ✓ Your rating: {{ userRating }}/5
+            <button class="btn btn-sm btn-outline-secondary ms-2" @click="clearRating" :disabled="isSubmittingRating">
+              ✕ Clear
+            </button>
           </p>
         </div>
 

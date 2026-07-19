@@ -61,8 +61,11 @@ onMounted(() => {
         </div>
       </article>
 
-      <div class="mt-4">
-        <router-link to="/health-resources" class="btn btn-outline-primary">← Back to All Resources</router-link>
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <router-link to="/health-resources" class="btn btn-outline-primary btn-lg">← Back to All Resources</router-link>
+        <button class="btn btn-outline-secondary btn-lg" @click="window.print()" title="Print this article in large font">
+          🖨️ Print This Article
+        </button>
       </div>
     </template>
   </div>
