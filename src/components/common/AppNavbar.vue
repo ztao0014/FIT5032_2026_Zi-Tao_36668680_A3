@@ -56,7 +56,7 @@ function handleLogout() {
               📚 HEALTH RESOURCES
             </RouterLink>
           </li>
-          <li class="nav-item">
+          <li v-if="!isLoggedIn || userRole === 'caregiver' || userRole === 'admin'" class="nav-item">
             <RouterLink class="nav-link" to="/caregivers" active-class="active">
               👨‍👩‍👦 FOR CAREGIVERS
             </RouterLink>

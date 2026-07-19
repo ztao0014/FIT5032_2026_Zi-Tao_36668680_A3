@@ -49,7 +49,7 @@ const router = createRouter({
       path: '/caregivers',
       name: 'caregivers',
       component: () => import('../views/CaregiversView.vue'),
-      meta: { requiresAuth: true, roles: ['senior', 'caregiver', 'admin'] },
+      meta: { requiresAuth: true, roles: ['caregiver', 'admin'] },
     },
     {
       path: '/contact',
