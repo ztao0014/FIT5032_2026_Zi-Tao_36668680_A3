@@ -39,16 +39,19 @@ onMounted(async () => {
 
 async function loadRatings() {
   try {
-    const q = query(collection(db, 'ratings'), where('itemId', '==', route.params.id), where('itemType', '==', 'event'))
+    const q = query(collection(db, 'ratings'), where('itemId', '==', route.params.id))
     const snap = await getDocs(q)
     if (!snap.empty) {
       let sum = 0
       snap.forEach(doc => { sum += doc.data().score })
       totalRatings.value = snap.size
       averageRating.value = Math.round((sum / snap.size) * 10) / 10
+    } else {
+      totalRatings.value = 0
+      averageRating.value = 0
     }
-  } catch {
-    // Firestore may not be connected yet — keep defaults
+  } catch (err) {
+    console.error('Failed to load ratings:', err)
   }
 }
 
