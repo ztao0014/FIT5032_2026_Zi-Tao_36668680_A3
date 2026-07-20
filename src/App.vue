@@ -1,6 +1,6 @@
 <script setup>
-import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
-import { RouterView, useRoute } from 'vue-router'
+import { ref, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { RouterView, useRoute, useRouter } from 'vue-router'
 import AppNavbar from './components/common/AppNavbar.vue'
 import AppFooter from './components/common/AppFooter.vue'
 import AccessibilityBar from './components/common/AccessibilityBar.vue'
@@ -8,6 +8,7 @@ import EmergencyButton from './components/common/EmergencyButton.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const route = useRoute()
+const router = useRouter()
 const authStore = useAuthStore()
 
 // Access denied banner
@@ -56,6 +57,12 @@ onMounted(async () => {
   await authStore.initAuthListener()
   window.addEventListener('scroll', handleScroll, { passive: true })
   setTimeout(setupRevealObserver, 300)
+})
+
+// Re-trigger reveal animation after every route change
+router.afterEach(async () => {
+  await nextTick()
+  setTimeout(setupRevealObserver, 150)
 })
 
 onBeforeUnmount(() => {
