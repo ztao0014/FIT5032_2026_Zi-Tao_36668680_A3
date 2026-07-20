@@ -101,7 +101,7 @@ router.beforeEach((to, from, next) => {
       return next({ path: '/login', query: { redirect: to.fullPath } })
     }
     if (!to.meta.roles.includes(authStore.userRole)) {
-      return next({ path: '/', query: { denied: '1' } })
+      return next({ path: '/', query: { accessDenied: to.path } })
     }
   }
 

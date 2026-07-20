@@ -1,13 +1,31 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { RouterView } from 'vue-router'
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { RouterView, useRoute } from 'vue-router'
 import AppNavbar from './components/common/AppNavbar.vue'
 import AppFooter from './components/common/AppFooter.vue'
 import AccessibilityBar from './components/common/AccessibilityBar.vue'
 import EmergencyButton from './components/common/EmergencyButton.vue'
 import { useAuthStore } from '@/stores/auth'
 
+const route = useRoute()
 const authStore = useAuthStore()
+
+// Access denied banner
+const accessDenied = ref(false)
+const deniedPath = ref('')
+
+watch(() => route.query.accessDenied, (val) => {
+  if (val) {
+    deniedPath.value = val
+    accessDenied.value = true
+    // Remove query param without re-navigation
+    history.replaceState({}, '', '/')
+  }
+}, { immediate: true })
+
+function dismissDenied() {
+  accessDenied.value = false
+}
 
 // Back to top button
 const showBackToTop = ref(false)
@@ -20,7 +38,7 @@ function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
-// Scroll-reveal: observe elements with .reveal class
+// Scroll-reveal
 let observer = null
 
 function setupRevealObserver() {
@@ -31,23 +49,13 @@ function setupRevealObserver() {
       }
     })
   }, { threshold: 0.15 })
-
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
 }
 
 onMounted(async () => {
   await authStore.initAuthListener()
   window.addEventListener('scroll', handleScroll, { passive: true })
-
-  // Run reveal after a small delay so DOM is ready
   setTimeout(setupRevealObserver, 300)
-
-  // Also observe after each route change
-  const origPush = history.pushState
-  history.pushState = function (...args) {
-    origPush.apply(this, args)
-    setTimeout(setupRevealObserver, 300)
-  }
 })
 
 onBeforeUnmount(() => {
@@ -57,8 +65,19 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <!-- Skip navigation link for keyboard users -->
   <a href="#main-content" class="skip-nav">Skip to main content</a>
+
+  <!-- Access Denied Banner -->
+  <div
+    v-if="accessDenied"
+    class="alert alert-danger alert-dismissible fade show m-0 rounded-0 text-center"
+    role="alert"
+  >
+    <strong>⛔ Access Denied</strong> &mdash;
+    You do not have permission to access <code>{{ deniedPath }}</code>.
+    Please contact an administrator if you believe this is a mistake.
+    <button type="button" class="btn-close" @click="dismissDenied" aria-label="Dismiss"></button>
+  </div>
 
   <AppNavbar />
   <AccessibilityBar />
@@ -70,7 +89,6 @@ onBeforeUnmount(() => {
   <AppFooter />
   <EmergencyButton />
 
-  <!-- Back to Top -->
   <button
     class="back-to-top"
     :class="{ visible: showBackToTop }"
