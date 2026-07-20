@@ -87,8 +87,17 @@ const router = createRouter({
 })
 
 // Navigation Guard — Authentication & Authorization
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
+
+  // Wait for Firebase auth state to initialize (prevents flash-redirect)
+  if (authStore.loading) {
+    await new Promise(resolve => {
+      const unwatch = setInterval(() => {
+        if (!authStore.loading) { clearInterval(unwatch); resolve() }
+      }, 100)
+    })
+  }
 
   // Route requires authentication
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
