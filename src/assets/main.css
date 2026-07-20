@@ -135,6 +135,37 @@ body.high-contrast .table { color: #fff !important; }
 }
 
 /* ============================================
+   BREADCRUMB
+   ============================================ */
+.breadcrumb {
+  background: transparent;
+  padding: 0.5rem 0;
+  margin-bottom: 1.5rem;
+}
+.breadcrumb-item {
+  font-size: calc(1rem * var(--font-scale));
+}
+.breadcrumb-item a {
+  color: var(--sb-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+.breadcrumb-item a:hover {
+  text-decoration: underline;
+}
+.breadcrumb-item.active {
+  color: var(--sb-text);
+  font-weight: 600;
+}
+.breadcrumb-item + .breadcrumb-item::before {
+  content: '›';
+  font-size: calc(1.3rem * var(--font-scale));
+  line-height: 1;
+  color: var(--sb-text-light);
+  padding: 0 0.5rem;
+}
+
+/* ============================================
    CARDS
    ============================================ */
 .card {
