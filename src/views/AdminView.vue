@@ -26,13 +26,13 @@ const stats = computed(() => ({
   confirmedBookings: bookings.value.filter(b => b.status === 'confirmed').length,
 }))
 
-const tabs = [
+const tabs = computed(() => [
   { id: 'overview', label: '📊 Overview' },
   { id: 'users', label: `👥 Users (${users.value.length})` },
   { id: 'bookings', label: `📅 Bookings (${bookings.value.length})` },
   { id: 'support', label: `📩 Support (${supportRequests.value.length})` },
   { id: 'messages', label: `✉️ Messages (${contactMessages.value.length})` },
-]
+])
 
 async function loadAllData() {
   loading.value = true
