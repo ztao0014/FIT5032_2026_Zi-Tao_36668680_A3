@@ -44,6 +44,11 @@ export async function sendEmail(templateParams, attachment = null) {
 
   const params = { ...templateParams }
 
+  // Auto-add timestamp if not provided
+  if (!params.time) {
+    params.time = new Date().toLocaleString('en-AU', { timeZone: 'Australia/Melbourne' })
+  }
+
   // Handle file attachment
   if (attachment) {
     if (attachment instanceof File) {
