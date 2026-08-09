@@ -59,8 +59,15 @@ function viewEvent(id) {
 
 <template>
   <div class="container py-5">
-    <h1 class="mb-3">📅 Community Events</h1>
-    <p class="lead text-muted mb-4">Browse online and offline activities. Simple registration — no printing required.</p>
+    <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap">
+      <div>
+        <h1 class="mb-1">📅 Community Events</h1>
+        <p class="lead text-muted mb-0">Browse online and offline activities. Simple registration — no printing required.</p>
+      </div>
+      <router-link to="/events/calendar" class="btn btn-outline-primary btn-lg mt-2">
+        📅 Calendar View
+      </router-link>
+    </div>
 
     <!-- Loading -->
     <div v-if="loading" class="text-center py-5">
