@@ -1,5 +1,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { jsPDF } from 'jspdf'
+import 'jspdf-autotable'
 
 const props = defineProps({
   columns: { type: Array, required: true },
@@ -145,6 +147,36 @@ function exportCSV() {
   URL.revokeObjectURL(url)
 }
 
+// Export to PDF
+function exportPDF() {
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' })
+  const title = props.tableId.replace(/-/g, ' ').toUpperCase()
+
+  // Title
+  doc.setFontSize(14)
+  doc.text(title, 40, 40)
+
+  // Table headers
+  const headers = props.columns.map(c => c.label)
+  const data = filteredRows.value.map(row =>
+    props.columns.map(c => String(row[c.key] ?? ''))
+  )
+
+  doc.autoTable({
+    head: [headers],
+    body: data,
+    startY: 55,
+    margin: 40,
+    styles: { fontSize: 8, cellPadding: 4 },
+    headStyles: { fillColor: [44, 95, 138], textColor: 255, fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: [245, 245, 245] },
+    tableLineColor: [200, 200, 200],
+    tableLineWidth: 0.5,
+  })
+
+  doc.save(`${props.tableId}-export.pdf`)
+}
+
 defineExpose({ exportCSV, filteredRows })
 </script>
 
@@ -164,8 +196,11 @@ defineExpose({ exportCSV, filteredRows })
         />
       </div>
       <div class="col-md-6 text-md-end">
-        <button class="btn btn-outline-secondary btn-sm" @click="exportCSV" title="Export to CSV">
-          📥 Export CSV
+        <button class="btn btn-outline-secondary btn-sm me-1" @click="exportCSV" title="Export to CSV">
+          📥 CSV
+        </button>
+        <button class="btn btn-outline-secondary btn-sm" @click="exportPDF" title="Export to PDF">
+          📄 PDF
         </button>
       </div>
     </div>
