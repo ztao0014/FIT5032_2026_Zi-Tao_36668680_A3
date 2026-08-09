@@ -143,7 +143,7 @@ function getUserLocation() {
   }
   isSearching.value = true
   navigator.geolocation.getCurrentPosition(
-    (pos) => {
+    async (pos) => {
       userLocation.value = [pos.coords.latitude, pos.coords.longitude]
       // Place user marker
       if (userMarker) map.removeLayer(userMarker)
@@ -152,12 +152,26 @@ function getUserLocation() {
         .bindPopup('<strong>Your Location</strong>')
         .openPopup()
 
-      // Calculate straight-line distance
-      const dist = map.distance(userLocation.value, officeLatLng)
-      distanceToOffice.value = (dist / 1000).toFixed(1)
+      // Reverse geocode to show address
+      try {
+        const revUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`
+        const revRes = await fetch(revUrl)
+        const revData = await revRes.json()
+        if (revData.display_name) {
+          destinationAddress.value = revData.display_name
+          userMarker.setPopupContent(`<strong>From:</strong> ${revData.display_name}`)
+        }
+      } catch (e) {
+        // Reverse geocoding is optional, continue without it
+      }
 
-      // Fit both markers
+      // Automatically generate route to office
+      await getRoute(userLocation.value, officeLatLng)
+      showRoute.value = true
+
+      // Fit both markers + route
       const group = L.featureGroup([userMarker, officeMarker])
+      if (routeLayer) group.addLayer(routeLayer)
       map.fitBounds(group.getBounds().pad(0.15))
 
       isSearching.value = false
@@ -167,27 +181,41 @@ function getUserLocation() {
       alert('Could not get your location. Please allow location access or search by address instead.')
       isSearching.value = false
     },
-    { enableHighAccuracy: true, timeout: 10000 },
+    { enableHighAccuracy: true, timeout: 15000 },
   )
 }
 
 async function searchAddressAndRoute() {
   if (!destinationAddress.value.trim()) {
-    alert('Please enter an address.')
+    alert('Please enter an address or street name.')
     return
   }
 
   isSearching.value = true
   try {
+    // Auto-append Melbourne context if not present for better results
+    let query = destinationAddress.value.trim()
+    const lower = query.toLowerCase()
+    if (!lower.includes('melbourne') && !lower.includes('victoria') && !lower.includes('vic')) {
+      query += ', Melbourne, Australia'
+    }
+
     // Use Nominatim for geocoding (free, uses OSM data)
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(destinationAddress.value)}&limit=1`
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=3&countrycodes=au`
     const response = await fetch(url)
     const data = await response.json()
 
     if (data.length === 0) {
-      alert('Address not found. Please try a different address.')
-      isSearching.value = false
-      return
+      // Try without country filter as fallback
+      const fallbackUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=3`
+      const fallbackRes = await fetch(fallbackUrl)
+      const fallbackData = await fallbackRes.json()
+      if (fallbackData.length === 0) {
+        alert(`Address "${destinationAddress.value}" not found. Try a nearby street name or suburb (e.g. "Bourke St" or "Carlton").`)
+        isSearching.value = false
+        return
+      }
+      data.push(...fallbackData)
     }
 
     const { lat, lon, display_name } = data[0]
@@ -200,10 +228,6 @@ async function searchAddressAndRoute() {
       .bindPopup(`<strong>From:</strong> ${display_name}`)
       .openPopup()
 
-    // Calculate distance
-    const dist = map.distance(destLatLng, officeLatLng)
-    distanceToOffice.value = (dist / 1000).toFixed(1)
-
     // Get route from OSRM
     await getRoute(destLatLng, officeLatLng)
 
@@ -215,7 +239,7 @@ async function searchAddressAndRoute() {
     showRoute.value = true
   } catch (err) {
     console.error('Search failed:', err)
-    alert('Could not find directions. Please try again.')
+    alert('Could not connect to map service. Check your network or try again later.')
   } finally {
     isSearching.value = false
   }
