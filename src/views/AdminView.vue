@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
-import { collection, getDocs, query, orderBy } from 'firebase/firestore'
+import { collection, getDocs, query, orderBy, deleteDoc, doc } from 'firebase/firestore'
 import { db } from '@/firebase/config'
 import DataTable from '@/components/common/DataTable.vue'
 import BulkEmailPanel from '@/components/admin/BulkEmailPanel.vue'
@@ -85,6 +85,7 @@ const userColumns = [
   { key: 'role', label: 'Role', sortable: true, searchable: true },
   { key: 'phone', label: 'Phone', sortable: false, searchable: true },
   { key: 'createdAt', label: 'Registered', sortable: true, searchable: false },
+  { key: 'actions', label: 'Actions', sortable: false, searchable: false },
 ]
 
 const bookingColumns = [
@@ -144,6 +145,17 @@ function formatDate(iso) {
 function roleBadge(role) {
   const map = { senior: 'bg-primary', caregiver: 'bg-warning text-dark', admin: 'bg-danger' }
   return map[role] || 'bg-secondary'
+}
+
+async function deleteUser(userId) {
+  if (!confirm('Delete this user account? This action cannot be undone.')) return
+  try {
+    await deleteDoc(doc(db, 'users', userId))
+    users.value = users.value.filter(u => u.id !== userId)
+  } catch (err) {
+    console.error('Delete user failed:', err)
+    alert('Failed to delete user: ' + err.message)
+  }
 }
 
 async function renderCharts() {
@@ -378,6 +390,17 @@ onMounted(async () => {
             </template>
             <template #cell-createdAt="{ value }">
               <span class="small text-muted">{{ formatDate(value) }}</span>
+            </template>
+            <template #cell-actions="{ row }">
+              <button
+                v-if="row.role !== 'admin'"
+                class="btn btn-outline-danger btn-sm"
+                @click="deleteUser(row.id)"
+                title="Delete user"
+              >
+                🗑
+              </button>
+              <span v-else class="text-muted small">—</span>
             </template>
           </DataTable>
         </div>
