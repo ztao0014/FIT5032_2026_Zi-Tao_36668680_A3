@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { collection, addDoc } from 'firebase/firestore'
 import { db } from '@/firebase/config'
+import MapView from '@/components/common/MapView.vue'
 
 const form = ref({
   name: '',
@@ -122,12 +123,14 @@ const officeInfo = {
           </div>
         </div>
 
-        <!-- Map Placeholder -->
+        <!-- Map -->
         <div class="card shadow-sm">
-          <div class="card-body text-center py-5 bg-light">
-            <span style="font-size: 3rem;">🗺️</span>
-            <p class="text-muted mb-0 mt-2">Map integration coming in Phase 2</p>
-            <p class="small text-muted">Google Maps API — office location, directions, and nearby services</p>
+          <div class="card-body p-0">
+            <MapView
+              :center="[-37.8142, 144.9637]"
+              :zoom="14"
+              height="400px"
+            />
           </div>
         </div>
       </div>
