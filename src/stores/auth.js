@@ -93,11 +93,11 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null
     try {
       await signOut(auth)
-      user.value = null
-      userRole.value = null
     } catch (err) {
       error.value = 'Failed to sign out. Please try again.'
-      throw err
+    } finally {
+      user.value = null
+      userRole.value = null
     }
   }
 

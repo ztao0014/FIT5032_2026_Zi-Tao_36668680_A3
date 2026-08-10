@@ -3,6 +3,7 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
+import { useAuthStore } from '@/stores/auth'
 
 // Bootstrap 5 CSS & JS
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -16,5 +17,10 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
+
+// Initialize Firebase auth listener BEFORE mounting
+// This ensures auth state is restored before router guard fires
+const authStore = useAuthStore()
+await authStore.initAuthListener()
 
 app.mount('#app')
