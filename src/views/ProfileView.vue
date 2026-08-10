@@ -15,6 +15,22 @@ const profile = ref({
 const isEditing = ref(false)
 const isSaving = ref(false)
 const saveMessage = ref('')
+const saveError = ref('')
+const originalProfile = ref({ displayName: '', phone: '' })
+
+function startEditing() {
+  // Cache current values before editing
+  originalProfile.value = { ...profile.value }
+  isEditing.value = true
+}
+
+function cancelEditing() {
+  // Restore original values on cancel
+  profile.value.displayName = originalProfile.value.displayName
+  profile.value.phone = originalProfile.value.phone
+  isEditing.value = false
+  saveError.value = ''
+}
 
 onMounted(async () => {
   profile.value.email = authStore.user?.email || ''
@@ -31,6 +47,7 @@ onMounted(async () => {
 })
 
 async function saveProfile() {
+  saveError.value = ''
   isSaving.value = true
   try {
     await updateDoc(doc(db, 'users', authStore.userId), {
@@ -41,7 +58,7 @@ async function saveProfile() {
     saveMessage.value = 'Profile updated successfully!'
     setTimeout(() => { saveMessage.value = '' }, 3000)
   } catch {
-    saveMessage.value = 'Failed to update profile.'
+    saveError.value = 'Failed to update profile. Please try again.'
   } finally {
     isSaving.value = false
   }
@@ -61,6 +78,7 @@ const roleLabel = computed(() => {
         <p class="text-muted mb-4">Manage your personal information and account settings.</p>
 
         <div v-if="saveMessage" class="alert alert-success">{{ saveMessage }}</div>
+        <div v-if="saveError" class="alert alert-danger">{{ saveError }}</div>
 
         <!-- Account Info -->
         <div class="card shadow-sm mb-4">
@@ -85,7 +103,7 @@ const roleLabel = computed(() => {
               <button
                 v-if="!isEditing"
                 class="btn btn-outline-primary btn-sm"
-                @click="isEditing = true"
+                @click="startEditing"
               >
                 ✏️ Edit
               </button>
@@ -104,7 +122,7 @@ const roleLabel = computed(() => {
                 <button type="submit" class="btn btn-primary" :disabled="isSaving">
                   {{ isSaving ? 'Saving...' : '💾 Save Changes' }}
                 </button>
-                <button type="button" class="btn btn-outline-secondary" @click="isEditing = false">
+                <button type="button" class="btn btn-outline-secondary" @click="cancelEditing">
                   Cancel
                 </button>
               </div>

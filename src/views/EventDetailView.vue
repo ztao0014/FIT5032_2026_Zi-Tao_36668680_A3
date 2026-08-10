@@ -107,11 +107,13 @@ const daysUntilClass = computed(() => {
 
 async function clearRating() {
   if (userRating.value === 0) return
-  userRating.value = 0
   try {
     await deleteDoc(doc(db, 'ratings', authStore.userId + '_' + route.params.id))
+    userRating.value = 0
     await loadRatings()
-  } catch { /* ignore */ }
+  } catch {
+    alert('Failed to clear your rating. Please try again.')
+  }
 }
 
 function goToBooking() {

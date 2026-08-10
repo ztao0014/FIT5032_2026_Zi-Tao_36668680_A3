@@ -19,8 +19,9 @@ watch(() => route.query.accessDenied, (val) => {
   if (val) {
     deniedPath.value = val
     accessDenied.value = true
-    // Remove query param without re-navigation
-    history.replaceState({}, '', '/')
+    // Remove just the query param, preserve the current path
+    const { accessDenied, ...rest } = route.query
+    router.replace({ query: rest })
   }
 }, { immediate: true })
 

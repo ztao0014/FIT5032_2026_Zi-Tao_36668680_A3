@@ -12,6 +12,7 @@ const form = ref({
 })
 
 const formErrors = ref({})
+const submitError = ref('')
 const submitSuccess = ref(false)
 const isSubmitting = ref(false)
 
@@ -40,6 +41,7 @@ async function submitForm() {
     submitSuccess.value = true
   } catch (err) {
     console.error('Contact form failed:', err)
+    submitError.value = 'Failed to send message. Please try again or call us at 1800-SILVER.'
   } finally {
     isSubmitting.value = false
   }
@@ -69,7 +71,11 @@ const officeInfo = {
               ✅ Thank you for your message! We will get back to you within 2 business days.
             </div>
 
-            <form v-else @submit.prevent="submitForm" novalidate>
+            <div v-if="submitError" class="alert alert-danger" role="alert">
+              {{ submitError }}
+            </div>
+
+            <form v-if="!submitSuccess" @submit.prevent="submitForm" novalidate>
               <div class="mb-3">
                 <label for="contact-name" class="form-label">Your Name <span class="text-danger">*</span></label>
                 <input id="contact-name" v-model="form.name" type="text" class="form-control" :class="{ 'is-invalid': formErrors.name }" />

@@ -313,14 +313,14 @@ onBeforeUnmount(() => {
         :class="activeFeature === 'nearby' ? 'btn-primary' : 'btn-outline-primary'"
         @click="switchFeature('nearby')"
       >
-        🔍 {{ $t ? '' : '' }}Nearby Health Services
+        🔍 Nearby Health Services
       </button>
       <button
         class="btn btn-sm"
         :class="activeFeature === 'directions' ? 'btn-primary' : 'btn-outline-primary'"
         @click="switchFeature('directions')"
       >
-        🧭 {{ $t ? '' : '' }}Directions to Office
+        🧭 Directions to Office
       </button>
     </div>
 

@@ -141,6 +141,13 @@ async function submitBooking() {
     return
   }
 
+  // Guard against expired session
+  if (!authStore.userId) {
+    alert('Your session has expired. Please log in again.')
+    router.push('/login')
+    return
+  }
+
   isSubmitting.value = true
   try {
     await addDoc(collection(db, 'bookings'), {
