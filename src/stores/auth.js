@@ -25,7 +25,13 @@ export const useAuthStore = defineStore('auth', () => {
   const userId = computed(() => user.value?.uid || null)
 
   // Actions
+  const ALLOWED_ROLES = ['senior', 'caregiver']
+
   async function register(email, password, role = 'senior') {
+    // Enforce valid roles — prevent self-assignment of admin
+    if (!ALLOWED_ROLES.includes(role)) {
+      role = 'senior'
+    }
     error.value = null
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password)
