@@ -1,6 +1,6 @@
 <script setup>
-import { ref, computed, onMounted, watch, nextTick } from 'vue'
-import { collection, getDocs, query, orderBy, deleteDoc, doc } from 'firebase/firestore'
+import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
+import { collection, getDocs, query, orderBy, where, writeBatch, deleteDoc, doc } from 'firebase/firestore'
 import { db } from '@/firebase/config'
 import DataTable from '@/components/common/DataTable.vue'
 import BulkEmailPanel from '@/components/admin/BulkEmailPanel.vue'
@@ -148,9 +148,17 @@ function roleBadge(role) {
 }
 
 async function deleteUser(userId) {
-  if (!confirm('Delete this user account? This action cannot be undone.')) return
+  if (!confirm('Delete this user and all their related data? This action cannot be undone.')) return
   try {
-    await deleteDoc(doc(db, 'users', userId))
+    const batch = writeBatch(db)
+    batch.delete(doc(db, 'users', userId))
+    // Also delete related bookings
+    const bookingsSnap = await getDocs(query(collection(db, 'bookings'), where('userId', '==', userId)))
+    bookingsSnap.forEach(d => batch.delete(d.ref))
+    // Also delete related ratings
+    const ratingsSnap = await getDocs(query(collection(db, 'ratings'), where('userId', '==', userId)))
+    ratingsSnap.forEach(d => batch.delete(d.ref))
+    await batch.commit()
     users.value = users.value.filter(u => u.id !== userId)
   } catch (err) {
     console.error('Delete user failed:', err)
@@ -221,6 +229,11 @@ watch(stats, async () => {
 
 onMounted(async () => {
   await loadAllData()
+})
+
+onBeforeUnmount(() => {
+  if (roleChart) { roleChart.destroy(); roleChart = null }
+  if (bookingChart) { bookingChart.destroy(); bookingChart = null }
 })
 </script>
 

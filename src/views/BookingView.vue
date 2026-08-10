@@ -5,6 +5,7 @@ import eventsData from '@/data/events.json'
 import { useAuthStore } from '@/stores/auth'
 import { collection, addDoc } from 'firebase/firestore'
 import { db } from '@/firebase/config'
+import { sendBookingConfirmation } from '@/services/emailService'
 
 const route = useRoute()
 const router = useRouter()
@@ -151,6 +152,13 @@ async function submitBooking() {
       createdAt: new Date().toISOString(),
     })
     submitSuccess.value = true
+	    // Send confirmation email (fire-and-forget; booking is saved regardless)
+	    sendBookingConfirmation({
+	      participantName: form.value.participantName,
+	      participantEmail: form.value.participantEmail,
+	      eventTitle: event.value.title,
+	      eventDate: event.value.date || '',
+	    }).catch(() => { /* email is non-critical */ })
   } catch (err) {
     console.error('Booking failed:', err)
     alert('Booking failed. Please try again.')

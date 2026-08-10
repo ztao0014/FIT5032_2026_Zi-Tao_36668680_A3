@@ -155,7 +155,7 @@ function getUserLocation() {
       // Reverse geocode to show address
       try {
         const revUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`
-        const revRes = await fetch(revUrl)
+        const revRes = await fetch(revUrl, { headers: { 'User-Agent': 'SilverBridgeHealth/1.0 (student-project)' } })
         const revData = await revRes.json()
         if (revData.display_name) {
           destinationAddress.value = revData.display_name
@@ -202,13 +202,13 @@ async function searchAddressAndRoute() {
 
     // Use Nominatim for geocoding (free, uses OSM data)
     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=3&countrycodes=au`
-    const response = await fetch(url)
+    const response = await fetch(url, { headers: { 'User-Agent': 'SilverBridgeHealth/1.0 (student-project)' } })
     const data = await response.json()
 
     if (data.length === 0) {
       // Try without country filter as fallback
       const fallbackUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=3`
-      const fallbackRes = await fetch(fallbackUrl)
+      const fallbackRes = await fetch(fallbackUrl, { headers: { 'User-Agent': 'SilverBridgeHealth/1.0 (student-project)' } })
       const fallbackData = await fallbackRes.json()
       if (fallbackData.length === 0) {
         alert(`Address "${destinationAddress.value}" not found. Try a nearby street name or suburb (e.g. "Bourke St" or "Carlton").`)

@@ -73,8 +73,11 @@ async function handleSend() {
   isSending.value = true
   showResults.value = false
   try {
-    const emails = checkedRecipients.value.map(u => u.email).filter(Boolean)
-    const results = await sendBulkEmail(emails, subject.value.trim(), message.value.trim())
+    const recipients = checkedRecipients.value.map(u => ({
+      email: u.email,
+      name: u.displayName || u.fullName || '',
+    })).filter(r => r.email)
+    const results = await sendBulkEmail(recipients, subject.value.trim(), message.value.trim())
     sendResults.value = results
     showResults.value = true
   } catch (err) {

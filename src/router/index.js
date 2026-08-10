@@ -96,12 +96,19 @@ router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
 
   // Wait for Firebase auth state to initialize (prevents flash-redirect)
+  // Includes a 10s timeout to prevent hanging if Firebase SDK fails to initialize
   if (authStore.loading) {
-    await new Promise(resolve => {
-      const unwatch = setInterval(() => {
-        if (!authStore.loading) { clearInterval(unwatch); resolve() }
-      }, 100)
-    })
+    await Promise.race([
+      new Promise(resolve => {
+        const unwatch = setInterval(() => {
+          if (!authStore.loading) { clearInterval(unwatch); resolve() }
+        }, 100)
+      }),
+      new Promise(resolve => setTimeout(() => {
+        authStore.loading = false
+        resolve()
+      }, 10000)),
+    ])
   }
 
   // Route requires authentication

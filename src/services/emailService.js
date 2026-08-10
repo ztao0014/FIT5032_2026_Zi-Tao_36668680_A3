@@ -86,27 +86,27 @@ export async function sendBookingConfirmation(booking, attachment = null) {
 
 /**
  * Send a bulk email to multiple recipients.
- * @param {Array<string>} recipients — Array of email addresses
+ * @param {Array<{email: string, name: string}>} recipients — Array of {email, name} objects
  * @param {string} subject — Email subject line
  * @param {string} message — Email body text
  * @param {File|null} attachment — Optional attachment
  */
 export async function sendBulkEmail(recipients, subject, message, attachment = null) {
   const results = []
-  for (const email of recipients) {
+  for (const r of recipients) {
     try {
       const res = await sendEmail(
         {
-          to_email: email,
-          to_name: '',
+          to_email: r.email,
+          to_name: r.name || '',
           subject,
           message,
         },
         attachment,
       )
-      results.push({ email, status: 'sent', response: res })
+      results.push({ email: r.email, name: r.name, status: 'sent', response: res })
     } catch (err) {
-      results.push({ email, status: 'failed', error: err.message })
+      results.push({ email: r.email, name: r.name, status: 'failed', error: err.message })
     }
   }
   return results

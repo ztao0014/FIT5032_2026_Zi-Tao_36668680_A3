@@ -113,10 +113,12 @@ export const useAuthStore = defineStore('auth', () => {
       if (docSnap.exists()) {
         userRole.value = docSnap.data().role || 'senior'
       } else {
+        console.warn('User document missing in Firestore for uid:', uid)
         userRole.value = 'senior'
       }
-    } catch {
-      userRole.value = 'senior'
+    } catch (err) {
+      console.error('Failed to fetch user role:', err)
+      // Keep previous role if fetch fails; do not silently downgrade
     }
   }
 
