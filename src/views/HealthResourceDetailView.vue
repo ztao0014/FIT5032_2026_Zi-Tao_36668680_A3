@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import healthResourcesData from '@/data/healthResources.json'
 import { useAccessibility } from '@/composables/useAccessibility'
+import { sanitizeHtml } from '@/utils/sanitize'
 
 const route = useRoute()
 const { plainLanguage } = useAccessibility()
@@ -11,7 +12,7 @@ const notFound = ref(false)
 
 const displayContent = computed(() => {
   if (!resource.value) return ''
-  return resource.value.content
+  return sanitizeHtml(resource.value.content)
 })
 
 function printArticle() {

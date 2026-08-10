@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import { sanitizeHtml } from '@/utils/sanitize'
 
 const authStore = useAuthStore()
 const isLoggedIn = computed(() => authStore.isAuthenticated)
@@ -262,7 +263,7 @@ const referrals = [
             <button type="button" class="btn-close btn-close-white" @click="showResourceModal = false"></button>
           </div>
           <div class="modal-body" style="font-size: 1.1rem; line-height: 1.8;">
-            <div v-html="selectedResource.content"></div>
+            <div v-html="sanitizeHtml(selectedResource.content)"></div>
           </div>
           <div class="modal-footer d-print-none">
             <button class="btn btn-outline-secondary" @click="showResourceModal = false">Close</button>

@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { collection, addDoc } from 'firebase/firestore'
 import { db } from '@/firebase/config'
+import { stripHtml } from '@/utils/sanitize'
 
 const callNumber = '1800-SILVER'
 const callHref = 'tel:1800745837'
@@ -40,7 +41,11 @@ async function submitForm() {
   isSubmitting.value = true
   try {
     await addDoc(collection(db, 'supportRequests'), {
-      ...form.value,
+      name: stripHtml(form.value.name),
+      phone: form.value.phone,
+      email: form.value.email.trim(),
+      urgency: form.value.urgency,
+      message: stripHtml(form.value.message),
       status: 'pending',
       createdAt: new Date().toISOString(),
     })

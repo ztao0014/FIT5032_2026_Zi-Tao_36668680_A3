@@ -6,6 +6,7 @@ import { useAuthStore } from '@/stores/auth'
 import { collection, addDoc } from 'firebase/firestore'
 import { db } from '@/firebase/config'
 import { sendBookingConfirmation } from '@/services/emailService'
+import { stripHtml } from '@/utils/sanitize'
 
 const route = useRoute()
 const router = useRouter()
@@ -154,7 +155,13 @@ async function submitBooking() {
       eventId: event.value.id,
       eventTitle: event.value.title,
       userId: authStore.userId,
-      ...form.value,
+      participantName: stripHtml(form.value.participantName),
+      participantPhone: form.value.participantPhone,
+      participantEmail: form.value.participantEmail.trim(),
+      participants: form.value.participants,
+      specialRequirements: stripHtml(form.value.specialRequirements),
+      emergencyContact: stripHtml(form.value.emergencyContact),
+      emergencyPhone: form.value.emergencyPhone,
       status: 'confirmed',
       createdAt: new Date().toISOString(),
     })

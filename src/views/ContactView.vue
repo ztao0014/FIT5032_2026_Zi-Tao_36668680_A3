@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { collection, addDoc } from 'firebase/firestore'
 import { db } from '@/firebase/config'
 import MapView from '@/components/common/MapView.vue'
+import { sanitizeHtml, stripHtml } from '@/utils/sanitize'
 
 const form = ref({
   name: '',
@@ -32,10 +33,14 @@ async function submitForm() {
   formErrors.value = validateForm()
   if (Object.keys(formErrors.value).length > 0) return
 
+  submitError.value = ''
   isSubmitting.value = true
   try {
     await addDoc(collection(db, 'contactMessages'), {
-      ...form.value,
+      name: stripHtml(form.value.name),
+      email: form.value.email.trim(),
+      subject: stripHtml(form.value.subject),
+      message: stripHtml(form.value.message),
       createdAt: new Date().toISOString(),
     })
     submitSuccess.value = true
@@ -125,7 +130,7 @@ const officeInfo = {
             </address>
             <hr />
             <p class="mb-0"><strong>Opening Hours:</strong></p>
-            <p v-html="officeInfo.hours" class="small"></p>
+            <p v-html="sanitizeHtml(officeInfo.hours)" class="small"></p>
           </div>
         </div>
 
