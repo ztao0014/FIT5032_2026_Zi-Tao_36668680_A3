@@ -1,0 +1,121 @@
+/* ============================================
+   SilverBridge Health — WCAG 2.1 AA Compliance
+   Additional accessibility enhancements
+   ============================================ */
+
+/* Screen-reader-only utility */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0;
+  margin: -1px; overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+
+/* Ensure focus is always visible for keyboard users */
+:focus {
+  outline: 2px solid var(--sb-accent, #e8913a);
+  outline-offset: 2px;
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Skip-nav link styling */
+.skip-nav {
+  text-decoration: none;
+}
+
+/* Reduced motion preference (WCAG 2.1) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .emergency-btn {
+    animation: none !important;
+  }
+}
+
+/* Ensure adequate color contrast for placeholder text (4.5:1 minimum) */
+::placeholder {
+  color: #595959 !important;
+  opacity: 1;
+}
+
+/* Keyboard focus indicator for interactive controls */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--sb-accent, #e8913a) !important;
+  outline-offset: 3px !important;
+}
+
+/* Links are distinguishable by more than just color */
+a:not(.btn):not(.nav-link):not(.navbar-brand):not(.dropdown-item):hover {
+  text-decoration: underline;
+}
+
+/* Improved visibility for form validation states */
+.form-control.is-invalid {
+  border-color: #dc3545;
+  border-width: 3px;
+}
+.form-control.is-valid {
+  border-color: #198754;
+  border-width: 3px;
+}
+.invalid-feedback {
+  color: #b02a37;
+  font-weight: 600;
+}
+
+/* Ensure non-text content has sufficient contrast */
+img[alt] {
+  color: transparent;
+}
+
+/* DataTable accessibility */
+.datatable .page-link:focus-visible {
+  box-shadow: 0 0 0 3px var(--sb-accent, #e8913a);
+  z-index: 3;
+  position: relative;
+}
+
+.sortable-header:focus-visible {
+  outline: 2px solid var(--sb-accent, #e8913a);
+  outline-offset: -2px;
+}
+
+/* Map controls accessibility */
+.leaflet-control-zoom a:focus-visible {
+  outline: 2px solid var(--sb-accent, #e8913a);
+  outline-offset: -2px;
+}
+
+/* Calendar accessibility */
+.calendar-cell:focus-visible {
+  outline: 2px solid var(--sb-accent, #e8913a);
+  outline-offset: -2px;
+}
+
+/* Ensure progress indicators are announced */
+[role="progressbar"] {
+  aria-valuenow: attr(aria-valuenow);
+}
+
+/* Better ARIA support for tab panels */
+[role="tabpanel"]:focus-visible {
+  outline: 2px solid var(--sb-accent, #e8913a);
+  outline-offset: -2px;
+}

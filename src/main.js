@@ -10,6 +10,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 // Custom global styles (overrides Bootstrap where needed)
 import './assets/main.css'
+import './assets/accessibility.css'
 
 const app = createApp(App)
 
