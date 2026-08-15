@@ -5,6 +5,10 @@
 
 /* ---------- CSS Custom Properties ---------- */
 :root {
+  /* Opt out of browser forced dark mode (auto-dark inverts light-only
+     design and makes dark text unreadable on inverted boxes). */
+  color-scheme: light only;
+
   --sb-primary: #2c5f8a;
   --sb-primary-dark: #1e3f5c;
   --sb-accent: #e8913a;
