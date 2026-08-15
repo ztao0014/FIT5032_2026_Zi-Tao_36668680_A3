@@ -112,7 +112,24 @@ body.high-contrast .form-control::placeholder { color: #aaa !important; }
 body.high-contrast .accessibility-bar { background-color: #000 !important; border-color: #fff !important; }
 body.high-contrast .accessibility-bar span { color: #fff !important; }
 body.high-contrast hr { border-color: #fff !important; }
-body.high-contrast .table { color: #fff !important; }
+body.high-contrast .table,
+body.high-contrast .table th,
+body.high-contrast .table td,
+body.high-contrast .table-light {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: #fff !important;
+}
+body.high-contrast .pagination .page-link {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: #fff !important;
+}
+body.high-contrast .pagination .page-item.active .page-link {
+  background-color: #ffff00 !important;
+  color: #000 !important;
+  border-color: #ffff00 !important;
+}
 
 /* ============================================
    UTILITY CLASSES
