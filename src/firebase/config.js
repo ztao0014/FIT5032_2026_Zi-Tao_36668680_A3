@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getAuth, GoogleAuthProvider } from 'firebase/auth'
+import { getAuth, GoogleAuthProvider, setPersistence, browserLocalPersistence } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
@@ -16,6 +16,13 @@ const app = initializeApp(firebaseConfig)
 
 // Export services for use throughout the app
 export const auth = getAuth(app)
+
+// Keep the user signed in across browser sessions (indefinitely, until they
+// explicitly log out). The SDK auto-refreshes the ID token in the background,
+// so there is no fixed session timeout. This is also the SDK default, but we
+// set it explicitly so the intent is unambiguous.
+setPersistence(auth, browserLocalPersistence).catch(console.error)
+
 export const googleProvider = new GoogleAuthProvider()
 export const db = getFirestore(app)
 
