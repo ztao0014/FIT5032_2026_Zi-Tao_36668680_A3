@@ -105,6 +105,10 @@ body.high-contrast .bg-white { background-color: #000 !important; }
 body.high-contrast .bg-sb-blue { background-color: #000 !important; border: 1px solid #fff; }
 body.high-contrast .bg-sb-dark { background-color: #000 !important; }
 body.high-contrast .badge { background-color: #ffff00 !important; color: #000 !important; }
+body.high-contrast .bulk-email-panel .card-body label {
+  background-color: #000 !important;
+  border-color: #fff !important;
+}
 body.high-contrast .form-control { background-color: #000 !important; color: #fff !important; border-color: #fff !important; }
 body.high-contrast .form-select { background-color: #000 !important; color: #fff !important; border-color: #fff !important; }
 body.high-contrast ::placeholder { color: #aaa !important; }
