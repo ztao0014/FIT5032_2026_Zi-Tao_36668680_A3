@@ -85,6 +85,18 @@ body.high-contrast .btn-outline-secondary, body.high-contrast .btn-outline-dark 
   color: #ffff00 !important; border-color: #ffff00 !important; }
 body.high-contrast .btn-warning { background-color: #ffff00 !important; color: #000 !important; }
 body.high-contrast .btn-danger { background-color: #ff0000 !important; color: #fff !important; }
+body.high-contrast .nav-tabs .nav-link,
+body.high-contrast .nav-pills .nav-link {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: #fff !important;
+}
+body.high-contrast .nav-tabs .nav-link.active,
+body.high-contrast .nav-pills .nav-link.active {
+  background-color: #ffff00 !important;
+  color: #000 !important;
+  border-color: #ffff00 !important;
+}
 body.high-contrast .navbar { background-color: #000 !important; border-bottom: 2px solid #fff; }
 body.high-contrast .card { background-color: #111 !important; border-color: #fff !important; }
 body.high-contrast .card-footer { background-color: #111 !important; border-color: #fff !important; }
