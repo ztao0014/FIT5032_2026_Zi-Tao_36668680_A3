@@ -65,39 +65,52 @@ html {
 /* ============================================
    HIGH CONTRAST MODE
    ============================================ */
-body.high-contrast { background-color: #000 !important; color: #fff !important; }
-body.high-contrast h1, body.high-contrast h2, body.high-contrast h3,
-body.high-contrast h4, body.high-contrast h5, body.high-contrast h6,
-body.high-contrast p, body.high-contrast li, body.high-contrast label,
-body.high-contrast span, body.high-contrast .card-title, body.high-contrast .card-text,
-body.high-contrast .card-body, body.high-contrast .navbar-brand, body.high-contrast .nav-link,
-body.high-contrast .form-label, body.high-contrast .breadcrumb-item,
-body.high-contrast .list-group-item, body.high-contrast .text-muted,
-body.high-contrast .text-dark, body.high-contrast .text-secondary, body.high-contrast .lead {
-  color: #fff !important; }
-body.high-contrast a { color: #ffff00 !important; }
-body.high-contrast .btn-primary { background-color: #ffff00 !important; color: #000 !important; border-color: #ffff00 !important; }
-body.high-contrast .btn-outline-primary, body.high-contrast .btn-outline-light,
-body.high-contrast .btn-outline-secondary, body.high-contrast .btn-outline-dark {
-  color: #ffff00 !important; border-color: #ffff00 !important; }
-body.high-contrast .btn-warning { background-color: #ffff00 !important; color: #000 !important; }
-body.high-contrast .btn-danger { background-color: #ff0000 !important; color: #fff !important; }
-body.high-contrast .navbar { background-color: #000 !important; border-bottom: 2px solid #fff; }
-body.high-contrast .card { background-color: #111 !important; border-color: #fff !important; }
-body.high-contrast .card-footer { background-color: #111 !important; border-color: #fff !important; }
-body.high-contrast .bg-light { background-color: #111 !important; }
-body.high-contrast .bg-white { background-color: #000 !important; }
-body.high-contrast .bg-sb-blue { background-color: #000 !important; border: 1px solid #fff; }
-body.high-contrast .bg-sb-dark { background-color: #000 !important; }
-body.high-contrast .badge { background-color: #ffff00 !important; color: #000 !important; }
-body.high-contrast .form-control { background-color: #000 !important; color: #fff !important; border-color: #fff !important; }
-body.high-contrast .form-select { background-color: #000 !important; color: #fff !important; border-color: #fff !important; }
-body.high-contrast ::placeholder { color: #aaa !important; }
-body.high-contrast .form-control::placeholder { color: #aaa !important; }
-body.high-contrast .accessibility-bar { background-color: #000 !important; border-color: #fff !important; }
-body.high-contrast .accessibility-bar span { color: #fff !important; }
-body.high-contrast hr { border-color: #fff !important; }
-body.high-contrast .table { color: #fff !important; }
+body.high-contrast,
+body.high-contrast * {
+  color: #fff !important;
+  background-color: #000 !important;
+  border-color: #fff !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+body.high-contrast a {
+  color: #ffff00 !important;
+  text-decoration: underline !important;
+}
+body.high-contrast .btn,
+body.high-contrast .btn * {
+  background-color: #ffff00 !important;
+  color: #000 !important;
+  border-color: #ffff00 !important;
+}
+body.high-contrast .btn-danger,
+body.high-contrast .btn-danger *,
+body.high-contrast .emergency-btn,
+body.high-contrast .emergency-btn * {
+  background-color: #ff0000 !important;
+  color: #fff !important;
+  border-color: #ff0000 !important;
+}
+body.high-contrast .btn-close {
+  background-color: #fff !important;
+  color: #000 !important;
+  border-color: #fff !important;
+}
+body.high-contrast ::placeholder {
+  color: #aaa !important;
+}
+/* Hide decorative glows/accents that add visual noise in high contrast */
+body.high-contrast .hero-section::before,
+body.high-contrast .hero-section::after,
+body.high-contrast .card::before,
+body.high-contrast .nav-link.active::after {
+  display: none !important;
+}
+body.high-contrast *:focus-visible {
+  outline: 3px solid #ffff00 !important;
+  outline-offset: 3px !important;
+}
 
 /* ============================================
    UTILITY CLASSES
