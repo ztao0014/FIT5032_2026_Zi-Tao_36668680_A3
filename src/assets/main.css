@@ -312,14 +312,14 @@ body.high-contrast .bg-sb-dark {
   background-color: var(--sb-accent);
   background-image: linear-gradient(135deg, var(--sb-accent-hover) 0%, var(--sb-accent) 100%);
   border-color: var(--sb-accent);
-  color: #fff;
+  color: var(--sb-text);
   box-shadow: 0 3px 10px rgba(232, 145, 58, 0.32);
 }
 .btn-warning:hover {
   background-color: var(--sb-accent-dark);
   background-image: linear-gradient(135deg, var(--sb-accent-hover) 0%, var(--sb-accent-dark) 100%);
   border-color: var(--sb-accent-dark);
-  color: #fff;
+  color: var(--sb-text);
   transform: translateY(-2px);
   box-shadow: 0 8px 18px rgba(232, 145, 58, 0.42);
 }
