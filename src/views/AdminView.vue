@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
-import { collection, getDocs, query, orderBy, where, writeBatch, deleteDoc, doc } from 'firebase/firestore'
+import { collection, getDocs, onSnapshot, query, orderBy, where, writeBatch, deleteDoc, doc } from 'firebase/firestore'
 import { db } from '@/firebase/config'
 import DataTable from '@/components/common/DataTable.vue'
 import BulkEmailPanel from '@/components/admin/BulkEmailPanel.vue'
@@ -21,6 +21,9 @@ const users = ref([])
 const bookings = ref([])
 const supportRequests = ref([])
 const contactMessages = ref([])
+
+// Realtime listener unsubscribe functions (cleaned up on unmount)
+const unsubscribers = []
 
 // Stats
 const stats = computed(() => ({
@@ -114,27 +117,38 @@ const messageColumns = [
   { key: 'createdAt', label: 'Date', sortable: true, searchable: false },
 ]
 
-async function loadAllData() {
+function startRealtimeListeners() {
   loading.value = true
   loadError.value = ''
-  try {
-    const [usersSnap, bookingsSnap, supportSnap, messagesSnap] = await Promise.all([
-      getDocs(query(collection(db, 'users'), orderBy('createdAt', 'desc'))),
-      getDocs(query(collection(db, 'bookings'), orderBy('createdAt', 'desc'))),
-      getDocs(query(collection(db, 'supportRequests'), orderBy('createdAt', 'desc'))),
-      getDocs(query(collection(db, 'contactMessages'), orderBy('createdAt', 'desc'))),
-    ])
 
-    users.value = usersSnap.docs.map(d => ({ id: d.id, ...d.data() }))
-    bookings.value = bookingsSnap.docs.map(d => ({ id: d.id, ...d.data() }))
-    supportRequests.value = supportSnap.docs.map(d => ({ id: d.id, ...d.data() }))
-    contactMessages.value = messagesSnap.docs.map(d => ({ id: d.id, ...d.data() }))
-  } catch (err) {
-    console.error('Admin data load failed:', err)
-    loadError.value = 'Could not load data. Check your Firestore permissions.'
-  } finally {
-    loading.value = false
-  }
+  // onSnapshot keeps the dashboard in sync with Firestore in real time: when a
+  // user books an event, submits a support request, registers, or sends a
+  // message, the corresponding table and stats update automatically — no refresh.
+  const sources = [
+    { key: 'users', target: users },
+    { key: 'bookings', target: bookings },
+    { key: 'supportRequests', target: supportRequests },
+    { key: 'contactMessages', target: contactMessages },
+  ]
+
+  const loaded = new Set()
+
+  sources.forEach(({ key, target }) => {
+    const unsub = onSnapshot(
+      query(collection(db, key), orderBy('createdAt', 'desc')),
+      (snap) => {
+        target.value = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        loaded.add(key)
+        if (loaded.size === sources.length) loading.value = false
+      },
+      (err) => {
+        console.error('Admin realtime listener failed:', err)
+        loadError.value = 'Could not load data. Check your Firestore permissions.'
+        loading.value = false
+      },
+    )
+    unsubscribers.push(unsub)
+  })
 }
 
 function formatDate(iso) {
@@ -227,11 +241,12 @@ watch(stats, async () => {
   if (activeTab.value === 'overview') await renderCharts()
 })
 
-onMounted(async () => {
-  await loadAllData()
+onMounted(() => {
+  startRealtimeListeners()
 })
 
 onBeforeUnmount(() => {
+  unsubscribers.forEach(unsub => unsub())
   if (roleChart) { roleChart.destroy(); roleChart = null }
   if (bookingChart) { bookingChart.destroy(); bookingChart = null }
 })
