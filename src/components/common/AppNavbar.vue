@@ -17,7 +17,7 @@ function handleLogout() {
 
 <template>
   <nav
-    class="navbar navbar-expand-lg navbar-dark navbar-silverbridge sticky-top"
+    class="navbar navbar-expand-xl navbar-dark navbar-silverbridge sticky-top"
     style="background: linear-gradient(135deg, var(--sb-primary-dark) 0%, var(--sb-primary) 100%);"
     aria-label="Main navigation"
   >
