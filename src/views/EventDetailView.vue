@@ -1,10 +1,10 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import eventsData from '@/data/events.json'
 import StarRating from '@/components/common/StarRating.vue'
 import { useAuthStore } from '@/stores/auth'
-import { doc, getDoc, setDoc, deleteDoc, collection, query, where, getDocs } from 'firebase/firestore'
+import { doc, onSnapshot, setDoc, deleteDoc, collection, query, where } from 'firebase/firestore'
 import { db } from '@/firebase/config'
 
 const route = useRoute()
@@ -23,47 +23,52 @@ const isSubmittingRating = ref(false)
 const canBook = computed(() => event.value && event.value.spotsLeft > 0)
 const isLoggedIn = computed(() => authStore.isAuthenticated)
 
-onMounted(async () => {
-  const id = route.params.id
-  const found = eventsData.events.find(e => e.id === id)
-  if (found) {
-    event.value = found
-    await loadRatings()
-    if (isLoggedIn.value) {
-      await loadUserRating()
-    }
-  } else {
-    notFound.value = true
-  }
-})
+let unsubRatings = null
+let unsubUserRating = null
 
-async function loadRatings() {
-  try {
-    const q = query(collection(db, 'ratings'), where('itemId', '==', route.params.id))
-    const snap = await getDocs(q)
+function startRatingsListener() {
+  if (unsubRatings) return
+  const q = query(collection(db, 'ratings'), where('itemId', '==', route.params.id))
+  unsubRatings = onSnapshot(q, (snap) => {
     if (!snap.empty) {
       let sum = 0
-      snap.forEach(doc => { sum += doc.data().score })
+      snap.forEach(d => { sum += d.data().score })
       totalRatings.value = snap.size
       averageRating.value = Math.round((sum / snap.size) * 10) / 10
     } else {
       totalRatings.value = 0
       averageRating.value = 0
     }
-  } catch (err) {
+  }, (err) => {
     console.error('Failed to load ratings:', err)
-  }
+  })
 }
 
-async function loadUserRating() {
-  if (!authStore.userId) return
-  try {
-    const ratingDoc = await getDoc(doc(db, 'ratings', authStore.userId + '_' + route.params.id))
-    if (ratingDoc.exists()) {
-      userRating.value = ratingDoc.data().score
-    }
-  } catch { /* ignore */ }
+function startUserRatingListener() {
+  if (!authStore.userId || unsubUserRating) return
+  unsubUserRating = onSnapshot(doc(db, 'ratings', authStore.userId + '_' + route.params.id), (snap) => {
+    userRating.value = snap.exists() ? snap.data().score : 0
+  }, () => { /* ignore */ })
 }
+
+onMounted(() => {
+  const id = route.params.id
+  const found = eventsData.events.find(e => e.id === id)
+  if (found) {
+    event.value = found
+    startRatingsListener()
+    if (isLoggedIn.value) {
+      startUserRatingListener()
+    }
+  } else {
+    notFound.value = true
+  }
+})
+
+onBeforeUnmount(() => {
+  if (unsubRatings) { unsubRatings(); unsubRatings = null }
+  if (unsubUserRating) { unsubUserRating(); unsubUserRating = null }
+})
 
 async function submitRating(score) {
   if (!isLoggedIn.value) {
@@ -81,7 +86,6 @@ async function submitRating(score) {
       score: score,
       timestamp: new Date().toISOString(),
     })
-    await loadRatings()
   } catch (err) {
     console.error('Rating submission failed:', err)
   } finally {
@@ -110,7 +114,6 @@ async function clearRating() {
   try {
     await deleteDoc(doc(db, 'ratings', authStore.userId + '_' + route.params.id))
     userRating.value = 0
-    await loadRatings()
   } catch {
     alert('Failed to clear your rating. Please try again.')
   }

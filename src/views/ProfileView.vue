@@ -1,7 +1,7 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import { doc, onSnapshot, updateDoc } from 'firebase/firestore'
 import { db } from '@/firebase/config'
 
 const authStore = useAuthStore()
@@ -18,6 +18,8 @@ const saveMessage = ref('')
 const saveError = ref('')
 const originalProfile = ref({ displayName: '', phone: '' })
 
+let unsubProfile = null
+
 function startEditing() {
   // Cache current values before editing
   originalProfile.value = { ...profile.value }
@@ -32,18 +34,22 @@ function cancelEditing() {
   saveError.value = ''
 }
 
-onMounted(async () => {
+onMounted(() => {
   profile.value.email = authStore.user?.email || ''
   if (authStore.userId) {
-    try {
-      const snap = await getDoc(doc(db, 'users', authStore.userId))
-      if (snap.exists()) {
+    unsubProfile = onSnapshot(doc(db, 'users', authStore.userId), (snap) => {
+      // Don't overwrite in-progress edits with a stale snapshot
+      if (snap.exists() && !isEditing.value) {
         const data = snap.data()
         profile.value.displayName = data.displayName || ''
         profile.value.phone = data.phone || ''
       }
-    } catch { /* ignore */ }
+    }, () => { /* ignore */ })
   }
+})
+
+onBeforeUnmount(() => {
+  if (unsubProfile) { unsubProfile(); unsubProfile = null }
 })
 
 async function saveProfile() {
