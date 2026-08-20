@@ -5,6 +5,7 @@ import AppNavbar from './components/common/AppNavbar.vue'
 import AppFooter from './components/common/AppFooter.vue'
 import AccessibilityBar from './components/common/AccessibilityBar.vue'
 import EmergencyButton from './components/common/EmergencyButton.vue'
+import RoleSelectionModal from './components/common/RoleSelectionModal.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const route = useRoute()
@@ -44,6 +45,11 @@ function scrollToTop() {
 let observer = null
 
 function setupRevealObserver() {
+  // Older browsers without IntersectionObserver: show content immediately.
+  if (typeof IntersectionObserver === 'undefined') {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'))
+    return
+  }
   observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -52,6 +58,11 @@ function setupRevealObserver() {
     })
   }, { threshold: 0.15 })
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
+  // Safety net: never leave content hidden if the observer fails to fire,
+  // which would make cards (and their buttons) invisible/unclickable.
+  setTimeout(() => {
+    document.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible'))
+  }, 1200)
 }
 
 onMounted(async () => {
@@ -89,6 +100,8 @@ onBeforeUnmount(() => {
 
   <AppNavbar />
   <AccessibilityBar />
+
+  <RoleSelectionModal v-if="authStore.needsRoleSelection" />
 
   <main id="main-content" class="flex-shrink-0">
     <RouterView />

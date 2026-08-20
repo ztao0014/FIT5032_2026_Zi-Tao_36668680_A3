@@ -7,7 +7,7 @@ import {
   onAuthStateChanged,
   signInWithPopup,
 } from 'firebase/auth'
-import { doc, setDoc, getDoc } from 'firebase/firestore'
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore'
 import { auth, db, googleProvider } from '@/firebase/config'
 
 export const useAuthStore = defineStore('auth', () => {
@@ -16,6 +16,7 @@ export const useAuthStore = defineStore('auth', () => {
   const userRole = ref(null)
   const loading = ref(true)
   const error = ref(null)
+  const roleConfirmed = ref(null)
 
   // Getters
   const isAuthenticated = computed(() => user.value !== null)
@@ -23,6 +24,7 @@ export const useAuthStore = defineStore('auth', () => {
   const isCaregiver = computed(() => userRole.value === 'caregiver')
   const isAdmin = computed(() => userRole.value === 'admin')
   const userId = computed(() => user.value?.uid || null)
+  const needsRoleSelection = computed(() => !!user.value && roleConfirmed.value === false)
 
   // Actions
   const ALLOWED_ROLES = ['senior', 'caregiver']
@@ -39,12 +41,14 @@ export const useAuthStore = defineStore('auth', () => {
       await setDoc(doc(db, 'users', cred.user.uid), {
         email: email,
         role: role,
+        roleConfirmed: true,
         createdAt: new Date().toISOString(),
         displayName: '',
         phone: '',
       })
       user.value = cred.user
       userRole.value = role
+      roleConfirmed.value = true
       return cred
     } catch (err) {
       error.value = mapFirebaseError(err.code)
@@ -76,21 +80,40 @@ export const useAuthStore = defineStore('auth', () => {
       const docSnap = await getDoc(docRef)
 
       if (!docSnap.exists()) {
-        // First time Google login — create user doc with default role
+        // First time Google login — create the doc unconfirmed so the app
+        // shows a role-selection modal right after login.
         await setDoc(docRef, {
           email: cred.user.email,
           role: 'senior',
+          roleConfirmed: false,
           createdAt: new Date().toISOString(),
           displayName: cred.user.displayName || '',
           phone: '',
         })
         userRole.value = 'senior'
+        roleConfirmed.value = false
       } else {
         userRole.value = docSnap.data().role
+        roleConfirmed.value = docSnap.data().roleConfirmed !== false
       }
       return cred
     } catch (err) {
       error.value = mapFirebaseError(err.code)
+      throw err
+    }
+  }
+
+  // Let a user choose their role after Google sign-up, or change it later.
+  // Only senior/caregiver are self-assignable — admin is protected.
+  async function updateUserRole(role) {
+    if (!ALLOWED_ROLES.includes(role) || !user.value) return
+    error.value = null
+    try {
+      await updateDoc(doc(db, 'users', user.value.uid), { role, roleConfirmed: true })
+      userRole.value = role
+      roleConfirmed.value = true
+    } catch (err) {
+      error.value = 'Failed to update your role. Please try again.'
       throw err
     }
   }
@@ -104,6 +127,7 @@ export const useAuthStore = defineStore('auth', () => {
     } finally {
       user.value = null
       userRole.value = null
+      roleConfirmed.value = null
     }
   }
 
@@ -111,10 +135,13 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const docSnap = await getDoc(doc(db, 'users', uid))
       if (docSnap.exists()) {
-        userRole.value = docSnap.data().role || 'senior'
+        const data = docSnap.data()
+        userRole.value = data.role || 'senior'
+        roleConfirmed.value = data.roleConfirmed !== false
       } else {
         console.warn('User document missing in Firestore for uid:', uid)
         userRole.value = 'senior'
+        roleConfirmed.value = true
       }
     } catch (err) {
       console.error('Failed to fetch user role:', err)
@@ -132,6 +159,7 @@ export const useAuthStore = defineStore('auth', () => {
         } else {
           user.value = null
           userRole.value = null
+          roleConfirmed.value = null
         }
         loading.value = false
         resolve()
@@ -156,16 +184,19 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     user,
     userRole,
+    roleConfirmed,
     loading,
     error,
     isAuthenticated,
     isSenior,
     isCaregiver,
     isAdmin,
+    needsRoleSelection,
     userId,
     register,
     login,
     loginWithGoogle,
+    updateUserRole,
     logout,
     initAuthListener,
   }

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
-import { collection, getDocs, onSnapshot, query, orderBy, where, writeBatch, deleteDoc, doc } from 'firebase/firestore'
+import { collection, getDocs, onSnapshot, query, orderBy, where, writeBatch, deleteDoc, updateDoc, doc } from 'firebase/firestore'
 import { db } from '@/firebase/config'
 import DataTable from '@/components/common/DataTable.vue'
 import BulkEmailPanel from '@/components/admin/BulkEmailPanel.vue'
@@ -98,6 +98,7 @@ const bookingColumns = [
   { key: 'participantEmail', label: 'Email', sortable: true, searchable: true },
   { key: 'status', label: 'Status', sortable: true, searchable: true },
   { key: 'createdAt', label: 'Date', sortable: true, searchable: false },
+  { key: 'actions', label: 'Actions', sortable: false, searchable: false },
 ]
 
 const supportColumns = [
@@ -107,6 +108,7 @@ const supportColumns = [
   { key: 'urgency', label: 'Urgency', sortable: true, searchable: true },
   { key: 'status', label: 'Status', sortable: true, searchable: true },
   { key: 'createdAt', label: 'Date', sortable: true, searchable: false },
+  { key: 'actions', label: 'Actions', sortable: false, searchable: false },
 ]
 
 const messageColumns = [
@@ -115,6 +117,7 @@ const messageColumns = [
   { key: 'subject', label: 'Subject', sortable: true, searchable: true },
   { key: 'message', label: 'Message', sortable: true, searchable: true },
   { key: 'createdAt', label: 'Date', sortable: true, searchable: false },
+  { key: 'actions', label: 'Actions', sortable: false, searchable: false },
 ]
 
 function startRealtimeListeners() {
@@ -177,6 +180,40 @@ async function deleteUser(userId) {
   } catch (err) {
     console.error('Delete user failed:', err)
     alert('Failed to delete user: ' + err.message)
+  }
+}
+
+async function deleteDocument(collectionName, id) {
+  try {
+    await deleteDoc(doc(db, collectionName, id))
+  } catch (err) {
+    console.error('Delete failed:', err)
+    alert('Failed to delete: ' + err.message)
+  }
+}
+
+async function deleteBooking(id) {
+  if (!confirm('Delete this booking? This action cannot be undone.')) return
+  await deleteDocument('bookings', id)
+}
+
+async function deleteSupportRequest(id) {
+  if (!confirm('Delete this support request? This action cannot be undone.')) return
+  await deleteDocument('supportRequests', id)
+}
+
+async function deleteMessage(id) {
+  if (!confirm('Delete this message? This action cannot be undone.')) return
+  await deleteDocument('contactMessages', id)
+}
+
+async function toggleSupportStatus(row) {
+  const newStatus = row.status === 'resolved' ? 'pending' : 'resolved'
+  try {
+    await updateDoc(doc(db, 'supportRequests', row.id), { status: newStatus })
+  } catch (err) {
+    console.error('Update support status failed:', err)
+    alert('Failed to update status: ' + err.message)
   }
 }
 
@@ -453,6 +490,9 @@ onBeforeUnmount(() => {
             <template #cell-createdAt="{ value }">
               <span class="small text-muted">{{ formatDate(value) }}</span>
             </template>
+            <template #cell-actions="{ row }">
+              <button class="btn btn-outline-danger btn-sm" @click="deleteBooking(row.id)" title="Delete booking">🗑</button>
+            </template>
           </DataTable>
         </div>
       </div>
@@ -480,6 +520,17 @@ onBeforeUnmount(() => {
             <template #cell-createdAt="{ value }">
               <span class="small text-muted">{{ formatDate(value) }}</span>
             </template>
+            <template #cell-actions="{ row }">
+              <button
+                class="btn btn-sm mb-1"
+                :class="row.status === 'resolved' ? 'btn-outline-warning' : 'btn-outline-success'"
+                @click="toggleSupportStatus(row)"
+                :title="row.status === 'resolved' ? 'Mark as pending' : 'Mark as resolved'"
+              >
+                {{ row.status === 'resolved' ? '↩ Reopen' : '✓ Resolve' }}
+              </button>
+              <button class="btn btn-outline-danger btn-sm mb-1" @click="deleteSupportRequest(row.id)" title="Delete request">🗑</button>
+            </template>
           </DataTable>
         </div>
       </div>
@@ -500,6 +551,9 @@ onBeforeUnmount(() => {
             </template>
             <template #cell-createdAt="{ value }">
               <span class="small text-muted">{{ formatDate(value) }}</span>
+            </template>
+            <template #cell-actions="{ row }">
+              <button class="btn btn-outline-danger btn-sm" @click="deleteMessage(row.id)" title="Delete message">🗑</button>
             </template>
           </DataTable>
         </div>

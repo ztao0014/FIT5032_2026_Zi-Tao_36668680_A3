@@ -14,6 +14,7 @@ const profile = ref({
 
 const isEditing = ref(false)
 const isSaving = ref(false)
+const isChangingRole = ref(false)
 const saveMessage = ref('')
 const saveError = ref('')
 const originalProfile = ref({ displayName: '', phone: '' })
@@ -70,6 +71,19 @@ async function saveProfile() {
   }
 }
 
+async function changeRole(role) {
+  isChangingRole.value = true
+  try {
+    await authStore.updateUserRole(role)
+    saveMessage.value = 'Role updated successfully!'
+    setTimeout(() => { saveMessage.value = '' }, 3000)
+  } catch {
+    saveError.value = authStore.error || 'Failed to update role. Please try again.'
+  } finally {
+    isChangingRole.value = false
+  }
+}
+
 const roleLabel = computed(() => {
   const map = { senior: '🧓 Senior', caregiver: '👨‍👩‍👦 Caregiver', admin: '🛡️ Admin' }
   return map[authStore.userRole] || authStore.userRole
@@ -93,6 +107,25 @@ const roleLabel = computed(() => {
             <ul class="list-unstyled mb-0">
               <li class="mb-2"><strong>Email:</strong> {{ profile.email }}</li>
               <li class="mb-2"><strong>Role:</strong> {{ roleLabel }}</li>
+              <li v-if="authStore.userRole !== 'admin'" class="mb-3">
+                <strong>Switch role:</strong>
+                <div class="btn-group btn-group-sm mt-2" role="group" aria-label="Switch account role">
+                  <button
+                    type="button"
+                    class="btn"
+                    :class="authStore.userRole === 'senior' ? 'btn-primary' : 'btn-outline-primary'"
+                    :disabled="isChangingRole"
+                    @click="changeRole('senior')"
+                  >🧓 Senior</button>
+                  <button
+                    type="button"
+                    class="btn"
+                    :class="authStore.userRole === 'caregiver' ? 'btn-primary' : 'btn-outline-primary'"
+                    :disabled="isChangingRole"
+                    @click="changeRole('caregiver')"
+                  >👨‍👩‍👦 Caregiver</button>
+                </div>
+              </li>
               <li class="mb-2">
                 <strong>Account Created:</strong>
                 {{ authStore.user?.metadata?.creationTime || 'Unknown' }}

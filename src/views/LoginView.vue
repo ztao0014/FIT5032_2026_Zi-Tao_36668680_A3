@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
@@ -37,6 +37,8 @@ async function handleGoogleLogin() {
   isLoading.value = true
   try {
     await authStore.loginWithGoogle()
+    // If this is a first-time Google sign-in, a role-selection modal is
+    // shown globally (see App.vue / RoleSelectionModal) after navigation.
     router.push(redirectPath.value)
   } catch {
     errorMessage.value = authStore.error || 'Google login failed.'

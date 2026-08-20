@@ -40,7 +40,7 @@ function handleLogout() {
       </button>
 
       <div id="mainNavbar" class="collapse navbar-collapse">
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+        <ul class="navbar-nav ms-auto mb-2 mb-xl-0 align-items-xl-center">
           <li class="nav-item">
             <RouterLink class="nav-link" to="/" exact-active-class="active">
               🏠 HOME
@@ -79,25 +79,25 @@ function handleLogout() {
           </li>
 
           <template v-if="!isLoggedIn">
-            <li class="nav-item ms-lg-2">
-              <RouterLink class="btn btn-outline-light mt-2 mt-lg-0" to="/login">
+            <li class="nav-item ms-xl-2">
+              <RouterLink class="btn btn-outline-light mt-2 mt-xl-0" to="/login">
                 LOG IN
               </RouterLink>
             </li>
-            <li class="nav-item ms-lg-2">
-              <RouterLink class="btn btn-warning mt-2 mt-lg-0" to="/register">
+            <li class="nav-item ms-xl-2">
+              <RouterLink class="btn btn-warning mt-2 mt-xl-0" to="/register">
                 REGISTER
               </RouterLink>
             </li>
           </template>
           <template v-else>
-            <li class="nav-item ms-lg-2">
+            <li class="nav-item ms-xl-2">
               <RouterLink class="nav-link" to="/profile">
                 👤 MY PROFILE
               </RouterLink>
             </li>
-            <li class="nav-item ms-lg-2">
-              <button class="btn btn-outline-light mt-2 mt-lg-0" @click="handleLogout">
+            <li class="nav-item ms-xl-2">
+              <button class="btn btn-outline-light mt-2 mt-xl-0" @click="handleLogout">
                 LOG OUT
               </button>
             </li>
